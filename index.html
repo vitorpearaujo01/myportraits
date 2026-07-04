@@ -2,474 +2,454 @@
 <html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Portraits</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        /* ANIMAÇÃO DE ENTRADA SUAVE (SÓ OPACIDADE) */
-        @keyframes fadeInSoft {
-            from {
-                opacity: 0;
-            }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Portraits</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* =========================================
+       1. VARIÁVEIS GERAIS
+       ========================================= */
+    :root {
+      --bg-top: #141414;
+      --bg-bottom: #000000;
+      --text-bright: #f2f2f2;
+      --text-dim: #8f8f8f;
+      --text-faint: #5c5c5c;
+      --accent: #b592b8;
+      --accent-dim: #7d6482;
+    }
 
-            to {
-                opacity: 1;
-            }
-        }
+    /* =========================================
+       2. RESET E CONFIGURAÇÕES GERAIS
+       ========================================= */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        /* estado inicial */
-        .title,
-        .menu-item,
-        .home-footer,
-        .back-btn,
-        .gallery-title,
-        .gallery-sub {
-            opacity: 0;
-        }
+    html, body {
+      height: 100%;
+      background:
+        radial-gradient(circle at 20% 0%, #262626 0%, transparent 45%),
+        linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 55%);
+      background-attachment: fixed;
+      font-family: "Geist", sans-serif;
+      color: var(--text-bright);
+      overflow-x: hidden;
+    }
 
-        /* HOME: animação ao carregar */
-        .title {
-            animation: fadeInSoft 3s ease forwards;
-            animation-delay: 0.1s;
-        }
+    .screen {
+      min-height: 100vh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 20vh 20vw 10vh;
+    }
 
-        nav.menu .menu-item:nth-child(1) {
-            animation: fadeInSoft 3s ease forwards;
-            animation-delay: 0.5s;
-        }
+    /* =========================================
+       3. ANIMAÇÕES
+       ========================================= */
+    @keyframes fadeInSoft {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
 
-        nav.menu .menu-item:nth-child(2) {
-            animation: fadeInSoft 3s ease forwards;
-            animation-delay: 0.8s;
-        }
+    /* Oculta os elementos inicialmente para a animação */
+    .title, .menu-item, .home-footer, .back-btn, .gallery-title, .gallery-sub {
+      opacity: 0;
+    }
 
-        nav.menu .menu-item:nth-child(3) {
-            animation: fadeInSoft 3s ease forwards;
-            animation-delay: 1.1s;
-        }
+    /* Gatilhos de animação da HOME */
+    #home .title { animation: fadeInSoft 3s ease forwards 0.1s; }
+    #home .menu-item:nth-child(1) { animation: fadeInSoft 3s ease forwards 0.5s; }
+    #home .menu-item:nth-child(2) { animation: fadeInSoft 3s ease forwards 0.8s; }
+    #home .menu-item:nth-child(3) { animation: fadeInSoft 3s ease forwards 1.1s; }
+    #home .menu-item:nth-child(4) { animation: fadeInSoft 3s ease forwards 1.4s; }
+    #home .home-footer { animation: fadeInSoft 3s ease forwards 2s; }
 
-        nav.menu .menu-item:nth-child(4) {
-            animation: fadeInSoft 3s ease forwards;
-            animation-delay: 1.4s;
-        }
+    /* Gatilhos de animação da GALERIA (ativados via classe .fade-in) */
+    #gallery.fade-in .back-btn { animation: fadeInSoft 3s ease forwards 0.1s; }
+    #gallery.fade-in .gallery-title { animation: fadeInSoft 3s ease forwards 0.5s; }
+    #gallery.fade-in .gallery-sub { animation: fadeInSoft 3s ease forwards 0.8s; }
 
-        .home-footer {
-            animation: fadeInSoft 3s ease forwards;
-            animation-delay: 2s;
-        }
+    /* =========================================
+       4. TELA PRINCIPAL (HOME)
+       ========================================= */
+    #home { display: flex; }
 
-        /* GALERIA: animação quando a classe .fade-in é adicionada */
-        #gallery.fade-in .back-btn {
-            animation: fadeInSoft 3s ease forwards;
-            animation-delay: 0.1s;
-        }
+    .title {
+      font-size: clamp(2.1rem, 6vw, 3rem);
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      background: linear-gradient(90deg, #ffffff 0%, #969595 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 9vh;
+      user-select: none;
+    }
 
-        #gallery.fade-in .gallery-title {
-            animation: fadeInSoft 3s ease forwards;
-            animation-delay: 0.5s;
-        }
+    nav.menu {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
 
-        #gallery.fade-in .gallery-sub {
-            animation: fadeInSoft 3s ease forwards;
-            animation-delay: 0.8s;
-        }
+    .menu-item {
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-size: clamp(1rem, 2.6vw, 1.25rem);
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      width: fit-content;
+      transition: transform .35s ease;
+      background: linear-gradient(90deg, #D4D2D2 0%, #ffffff 50%, #969595 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-        :root {
-            --bg-top: #141414;
-            --bg-bottom: #000000;
-            --text-bright: #f2f2f2;
-            --text-dim: #8f8f8f;
-            --text-faint: #5c5c5c;
-            --accent: #b592b8;
-            --accent-dim: #7d6482;
-        }
+    .menu-item:hover { transform: translateX(4px); }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    /* Menu Especial: Yoná */
+    .menu-item.yona {
+      background: linear-gradient(90deg, #D4D2D2 0%, #ffffff 50%, var(--accent-dim) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-        html,
-        body {
-            height: 100%;
-            background:
-                radial-gradient(circle at 20% 0%, #262626 0%, transparent 45%),
-                linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 55%);
-            background-attachment: fixed;
-            font-family: "Geist", sans-serif;
-            font-optical-sizing: auto;
-            color: var(--text-bright);
-            overflow-x: hidden;
-        }
+    .home-footer {
+      margin-top: auto;
+      padding-top: 6vh;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--text-faint);
+      text-transform: uppercase;
+    }
 
-        .screen {
-            min-height: 100vh;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            padding: 25vh 25vw 0vh;
-        }
+    /* =========================================
+       5. TELA DE GALERIA
+       ========================================= */
+    #gallery { display: none; }
 
-        /* ---------- HOME ---------- */
-        #home {
-            display: flex;
-        }
+    .back-btn {
+      cursor: pointer;
+      background: none;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 6vh;
+      width: fit-content;
+      transition: color .3s ease, transform .3s ease;
+    }
 
-        .title {
-            font-size: clamp(2.1rem, 6vw, 3rem);
-            font-weight: 600;
-            letter-spacing: 0.03em;
-            background: linear-gradient(90deg, #ffffff 0%, #969595 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 9vh;
-            user-select: none;
-        }
+    .back-btn:hover {
+      color: var(--text-bright);
+      transform: translateX(-4px);
+    }
 
-        nav.menu {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+    .back-btn svg {
+      width: 14px;
+      height: 14px;
+    }
 
-        .menu-item {
-            cursor: pointer;
-            background: none;
-            border: none;
-            outline: none;
-            font-size: clamp(1rem, 2.6vw, 1.25rem);
-            font-weight: 500;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            width: fit-content;
-            position: relative;
-            padding: 0 0 2px 0;
-            transition: transform .35s ease, opacity .35s ease;
-            background: linear-gradient(90deg, #D4D2D2 0%, #ffffff 50%, #969595 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+    .back-btn-bottom {
+      margin-top: 10vh;
+      margin-bottom: 0;
+      align-self: flex-start;
+    }
 
-        .menu-item:hover,
-        .menu-item:focus-visible {
-            transform: translateX(4px);
-        }
+    .gallery-title {
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      margin-bottom: 3rem;
+    }
 
-        .menu-item:hover::after,
-        .menu-item:focus-visible::after {
-            width: 100%;
-        }
+    /* Gradientes Dinâmicos para os Títulos das Galerias */
+    .gallery-title.yona-black-white {
+      background: linear-gradient(90deg, #7A7A7A 0%, #ffffff 10%, #2E1A42 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-        .home-footer {
-            margin-top: auto;
-            padding-top: 6vh;
-            font-size: 0.7rem;
-            letter-spacing: 0.15em;
-            color: var(--text-faint);
-            text-transform: uppercase;
-        }
+    /* Cidades e Inverno (Mesmo gradiente, agrupados para evitar repetição) */
+    .gallery-title.boston,
+    .gallery-title.new-york,
+    .gallery-title.winter {
+      background: linear-gradient(90deg, #ffffff 0%, #7A7A7A 40%, #7A7A7A 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-        /* ---------- GALLERY VIEW ---------- */
-        #gallery {
-            display: none;
-        }
+    .gallery-sub {
+      color: var(--text-faint);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 8vh;
+    }
 
-        .back-btn {
-            cursor: pointer;
-            background: none;
-            border: none;
-            outline: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--text-dim);
-            font-size: 0.85rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            margin-bottom: 6vh;
-            width: fit-content;
-            transition: color .3s ease, transform .3s ease;
-        }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
 
-        .back-btn:hover {
-            color: var(--text-bright);
-            transform: translateX(-4px);
-        }
+    /* Slots de Imagem */
+    .slot {
+      border: 4px solid transparent;
+      border-radius: 4px;
+      overflow: hidden;
+      align-self: start;
+      opacity: 0; 
+      padding: 0; /* Removido do JS e trazido pro CSS */
+    }
 
-        .back-btn svg {
-            width: 14px;
-            height: 14px;
-        }
+    .slot.fade-in-photo {
+      animation: fadeInSoft 3s ease forwards;
+      animation-delay: var(--delay, 0s);
+    }
 
-        .gallery-title {
-            font-size: clamp(1.8rem, 5vw, 2.6rem);
-            font-weight: 600;
-            letter-spacing: 0.03em;
-            margin-bottom: 0.6rem;
-        }
+    .slot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .4s ease, filter .4s ease;
+      filter: grayscale(0.2);
+      cursor: zoom-in;
+    }
 
-        .gallery-sub {
-            color: var(--text-faint);
-            font-size: 0.8rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            margin-bottom: 5vh;
-        }
+    .slot:hover img {
+      transform: translateY(-3px) translateX(-3px);
+      filter: grayscale(0); /* Opcional: tira o P&B ao passar o mouse */
+    }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-        }
+    /* =========================================
+       6. LIGHTBOX (VISUALIZAÇÃO DE IMAGEM)
+       ========================================= */
+    #lightbox {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.95);
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-out;
+    }
 
-        /* ---------- SLOTS / FOTOS ---------- */
-        .slot {
-            border: 1px dashed #3a3a3a;
-            border-radius: 2px;
-            overflow: hidden;
-            transition: border-color .4s ease, background .4s ease;
-            cursor: pointer;
-            align-self: start;
-            opacity: 0;
-            /* começa invisível para o fade */
-        }
+    #lightbox-img {
+      max-width: 90vw;
+      max-height: 85vh;
+      object-fit: contain;
+      border-radius: 4px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      cursor: default;
+    }
 
-        /* ativa o fade nas fotos, com delay vindo da variável --delay */
-        .slot.fade-in-photo {
-            animation: fadeInSoft 3s ease forwards;
-            animation-delay: var(--delay, 0s);
-        }
+    .close-lightbox {
+      position: absolute;
+      top: 3vh;
+      right: 5vw;
+      color: var(--text-dim);
+      font-size: 2.5rem;
+      font-weight: 300;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
 
-        /* A imagem dentro do slot */
-        .slot img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            transition: transform .4s ease, opacity .4s ease, filter .4s ease;
-            filter: grayscale(0.2);
-        }
+    .close-lightbox:hover { color: var(--text-bright); }
 
-        /* EFEITO AO PASSAR O MOUSE (HOVER) */
-        .slot:hover img {
-            transform: scale(1.05) translateX(4px);
-            opacity: 0.8;
-            filter: grayscale(0);
-        }
-
-        .slot:hover {
-            border-color: var(--text-bright);
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        @media (max-width:480px) {
-            .screen {
-                padding: 8vh 7vw 5vh;
-            }
-
-            nav.menu {
-                gap: 1.7rem;
-            }
-
-            .photo {
-                aspect-ratio: 3/4;
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                border-radius: 2px;
-                background: rgba(255, 255, 255, 0.015);
-                border: 1px solid #3a3a3a;
-            }
-        }
-
-        /* Estilo do fundo do Lightbox */
-        #lightbox {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.95);
-            align-items: center;
-            justify-content: center;
-            cursor: zoom-out;
-        }
-
-        /* Estilo da imagem expandida */
-        #lightbox-img {
-            max-width: 90vw;
-            max-height: 85vh;
-            object-fit: contain;
-            border-radius: 4px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            cursor: default;
-        }
-
-        /* Botão de fechar (X) */
-        .close-lightbox {
-            position: absolute;
-            top: 3vh;
-            right: 5vw;
-            color: var(--text-dim);
-            font-size: 2.5rem;
-            font-weight: 300;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-
-        .close-lightbox:hover {
-            color: var(--text-bright);
-        }
-        
-        
-    </style>
-
-
+    /* =========================================
+       7. RESPONSIVIDADE (MOBILE)
+       ========================================= */
+    @media (max-width: 480px) {
+      .screen { padding: 8vh 7vw 5vh; }
+      #home-inner { margin-top: 20vh; }
+      nav.menu { gap: 1.7rem; }
+      
+      .slot img { /* Ajuste do placeholder no mobile */
+        aspect-ratio: 3/4;
+        background: rgba(255,255,255,0.015);
+        border: 1px solid #3a3a3a;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-    <!-- HOME SCREEN -->
-    <div class="screen" id="home">
-  <div id="home-inner">
-    <h1 class="title">MY PORTRAITS</h1>
-    <nav class="menu">
-      <button class="menu-item" onclick="openGallery('Yona Black &amp; White')">Yona Black White</button>
-      <button class="menu-item" onclick="openGallery('Boston')">Boston</button>
-      <button class="menu-item" onclick="openGallery('New York')">New York</button>
-      <button class="menu-item" onclick="openGallery('Winter')">Winter</button>
-    </nav>
+  <main class="screen" id="home">
+    <div id="home-inner">
+      <h1 class="title">MY PORTRAITS</h1>
+      <nav class="menu">
+        <button class="menu-item yona" onclick="openGallery(this.textContent)">YONÁ BLACK WHITE</button>
+        <button class="menu-item" onclick="openGallery(this.textContent)">BOSTON</button>
+        <button class="menu-item" onclick="openGallery(this.textContent)">NEW YORK</button>
+        <button class="menu-item" onclick="openGallery(this.textContent)">WINTER</button>
+      </nav>
+    </div>
+    <div class="home-footer">Portfolio 2026 - VITOR ARAUJO</div>
+  </main>
+
+  <main class="screen" id="gallery">
+    <button class="back-btn" onclick="goHome()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      Voltar
+    </button>
+    
+    <h2 class="gallery-title" id="gallery-title">Categoria</h2>
+    <p class="gallery-sub">Adicione suas fotos a esta série</p>
+    
+    <div class="grid" id="gallery-grid"></div>
+
+    <button class="back-btn back-btn-bottom" onclick="goHome()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      Voltar
+    </button>
+  </main>
+
+  <div id="lightbox" onclick="closeLightbox()">
+    <span class="close-lightbox">&times;</span>
+    <img id="lightbox-img" src="" alt="Foto Expandida" onclick="event.stopPropagation()">
   </div>
-  <div class="home-footer">Portfolio &mdash; VITOR ARAUJO</div>
-</div>
 
+  <script>
+    // 1. DADOS CENTRALIZADOS (Fica muito mais fácil adicionar fotos e textos aqui)
+    const galleryData = {
+      'YONÁ BLACK WHITE': {
+        description: 'Retratos em preto e branco capturando a essência e personalidade',
+        images: ['images/YONA-1.png','images/YONA-2.png']
+      },
+      'BOSTON': {
+        description: 'Cenas urbanas e arquitetura da histórica cidade de Boston',
+        images: ['images/boston-1.png', 'images/boston-2.png', 'images/boston-3.png']
+      },
+      'NEW YORK': {
+        description: 'A energia vibrante e diversidade das ruas de Nova York',
+        images: []
+      },
+      'WINTER': {
+        description: 'Paisagens geladas e a beleza minimalista do inverno',
+        images: []
+      }
+    };
 
-    <!-- GALLERY SCREEN -->
-    <div class="screen" id="gallery">
-        <button class="back-btn" onclick="goHome()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-            Voltar
-        </button>
-        <h2 class="gallery-title" id="gallery-title">Categoria</h2>
-        <p class="gallery-sub">Adicione suas fotos a esta série</p>
-        <div class="grid" id="gallery-grid"></div>
-    </div>
+    // 2. FUNÇÃO: ABRIR GALERIA
+    function openGallery(name) {
+      // Esconde a Home e Mostra a Galeria
+      document.getElementById('home').style.display = 'none';
+      const gallery = document.getElementById('gallery');
+      gallery.style.display = 'flex';
 
-    <script>
-        const photos = {
-            'Yona Black & White': [
-                // 'images/yona-1.jpg',
-            ],
-            'Boston': [
-                'images/boston-1.png',
-                'images/boston-2.png',
-                'images/boston-3.png',
-            ],
-            'New York': [
-                // 'images/newyork-1.jpg',
-            ],
-            'Winter': [
-                // 'images/winter-1.jpg',
-            ]
-        };
+      // Reinicia a animação de entrada da galeria
+      gallery.classList.remove('fade-in');
+      void gallery.offsetWidth; // Truque do JS para forçar o reflow do navegador
+      gallery.classList.add('fade-in');
 
-        function openGallery(name) {
-            document.getElementById('home').style.display = 'none';
-            const gallery = document.getElementById('gallery');
-            gallery.style.display = 'flex';
+      // Pega os dados selecionados baseados no nome do botão clicado
+      const data = galleryData[name];
 
-            // reinicia a animação dos textos da galeria
-            gallery.classList.remove('fade-in');
-            void gallery.offsetWidth;
-            gallery.classList.add('fade-in');
+      // Atualiza o Título e a Classe (para puxar a cor de gradiente certa do CSS)
+      const titleElement = document.getElementById('gallery-title');
+      titleElement.textContent = name;
+      // Transforma "YONÁ BLACK WHITE" em "yona-black-white" para linkar com o CSS
+      const cssClassName = name.toLowerCase().replace(/\s+/g, '-').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      titleElement.className = `gallery-title ${cssClassName}`;
 
-            const titleElement = document.getElementById('gallery-title');
-            titleElement.textContent = name;
+      // Atualiza o Subtítulo
+      const subElement = document.querySelector('.gallery-sub');
+      subElement.textContent = data.description || 'Adicione suas fotos a esta série';
 
-            const grid = document.getElementById('gallery-grid');
-            grid.innerHTML = '';
+      // Limpa as imagens antigas do Grid
+      const grid = document.getElementById('gallery-grid');
+      grid.innerHTML = '';
 
-            const categoryName = titleElement.textContent;
-            const list = photos[categoryName] || [];
+      const list = data.images || [];
 
-            if (list.length === 0) {
-                for (let i = 1; i <= 8; i++) {
-                    const slot = document.createElement('div');
-                    slot.className = 'slot';
-                    slot.textContent = 'Foto ' + i;
-                    grid.appendChild(slot);
-                }
-            } else {
-                list.forEach((src, index) => {
-                    const slot = document.createElement('div');
-                    slot.className = 'slot';
-                    slot.style.padding = '0';
-                    slot.style.overflow = 'hidden';
-
-                    const img = document.createElement('img');
-                    img.src = src;
-                    img.alt = 'Portrait';
-                    img.style.cursor = 'zoom-in';
-                    img.onclick = function() {
-                        openLightbox(src);
-                    };
-
-                    slot.appendChild(img);
-                    grid.appendChild(slot);
-
-                    // define o delay individual
-                    slot.style.setProperty('--delay', `${1 + index * 2}s`);
-
-                    // ativa o fade no frame seguinte
-                    requestAnimationFrame(() => {
-                        slot.classList.add('fade-in-photo');
-                    });
-                });
-
-
-            }
-
-            window.scrollTo(0, 0);
+      // Se não houver fotos, gera 8 "slots" vazios para demonstração
+      if (list.length === 0) {
+        for (let i = 1; i <= 8; i++) {
+          const slot = document.createElement('div');
+          slot.className = 'slot fade-in-photo'; // Adiciona animação imediata
+          slot.textContent = 'Foto ' + i;
+          grid.appendChild(slot);
         }
+      } else {
+        // Renderiza as imagens do banco de dados simulado
+        list.forEach((src, index) => {
+          const slot = document.createElement('div');
+          slot.className = 'slot';
+          
+          const img = document.createElement('img');
+          img.src = src;
+          img.alt = `Portrait de ${name}`;
+          
+          // Adiciona evento de Lightbox ao clicar na imagem
+          img.onclick = () => openLightbox(src);
 
-        function goHome() {
-            const gallery = document.getElementById('gallery');
-            gallery.style.display = 'none';
-            gallery.classList.remove('fade-in');
+          slot.appendChild(img);
+          grid.appendChild(slot);
 
-            document.getElementById('home').style.display = 'flex';
-            window.scrollTo(0, 0);
-        }
+          // Aplica o atraso escalonado da animação
+          slot.style.setProperty('--delay', `${1 + index * 2}s`);
+          requestAnimationFrame(() => {
+            slot.classList.add('fade-in-photo');
+          });
+        });
+      }
 
-        /* --- FUNÇÕES DO LIGHTBOX --- */
-        function openLightbox(imageSrc) {
-            const lightbox = document.getElementById('lightbox');
-            const lightboxImg = document.getElementById('lightbox-img');
+      // Rola a página para o topo suavemente
+      window.scrollTo(0, 0);
+    }
 
-            lightboxImg.src = imageSrc;
-            lightbox.style.display = 'flex';
-        }
+    // 3. FUNÇÃO: VOLTAR PARA A HOME
+    function goHome() {
+      const gallery = document.getElementById('gallery');
+      gallery.style.display = 'none';
+      gallery.classList.remove('fade-in');
 
-        function closeLightbox() {
-            document.getElementById('lightbox').style.display = 'none';
-        }
-    </script>
+      document.getElementById('home').style.display = 'flex';
+      window.scrollTo(0, 0);
+    }
 
-    <div id="lightbox" onclick="closeLightbox()">
-        <span class="close-lightbox">&times;</span>
-        <img id="lightbox-img" src="" alt="Foto Expandida" onclick="event.stopPropagation()">
-    </div>
+    // 4. FUNÇÕES: LIGHTBOX (Visualizador de imagens grandes)
+    function openLightbox(imageSrc) {
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightbox-img');
+      lightboxImg.src = imageSrc;
+      lightbox.style.display = 'flex';
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').style.display = 'none';
+    }
+  </script>
 </body>
-
 </html>
