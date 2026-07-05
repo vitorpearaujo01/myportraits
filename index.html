@@ -74,9 +74,9 @@
     #home .home-footer { animation: fadeInSoft 3s ease forwards 2s; }
 
     /* Gatilhos de animação da GALERIA (ativados via classe .fade-in) */
-    #gallery.fade-in .back-btn { animation: fadeInSoft 3s ease forwards 0.1s; }
+    #gallery.fade-in .back-btn { animation: fadeInSoft 3s ease forwards 4s; }
     #gallery.fade-in .gallery-title { animation: fadeInSoft 3s ease forwards 0.5s; }
-    #gallery.fade-in .gallery-sub { animation: fadeInSoft 3s ease forwards 0.8s; }
+    #gallery.fade-in .gallery-sub { animation: fadeInSoft 3s ease forwards 1.5s; }
 
     /* =========================================
        4. TELA PRINCIPAL (HOME)
@@ -254,7 +254,7 @@
     }
 
     .slot.fade-in-photo {
-      animation: fadeInSoft 2s ease forwards;
+      animation: fadeInSoft 8s ease forwards;
       animation-delay: var(--delay, 0s);
     }
 
@@ -353,9 +353,67 @@
   .slot img {
     aspect-ratio: 3/4;
     background: rgba(255,255,255,0.015);
-    border: 1px solid #3a3a3a;
   }
 }
+/* Container da mensagem de espera */
+.empty-gallery-msg {
+  grid-column: 1 / -1; /* Ocupa as duas colunas do grid */
+  text-align: center;
+  padding: 10vh 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* 1. O PAI: Controla o surgimento de TUDO (Bolinha + Texto) */
+.empty-gallery-msg {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 10vh 0;
+  
+  /* Aqui dizemos para todo o conjunto surgir suavemente */
+  opacity: 0;
+  animation: fadeInSoft 3s ease forwards 4s;
+}
+
+/* 2. A BOLINHA: Apenas gira */
+.loader {
+  width: 30px;
+  height: 30px;
+  border: 4px solid rgba(255,255,255,0.1);
+  border-top: 4px solid #303030;
+  border-radius: 50%;
+  /* Apenas a animação de girar, sem interferir no surgimento */
+  animation: spin 8s linear infinite;
+}
+
+/* 3. O TEXTO: Apenas o estilo do gradiente */
+.empty-gallery-msg p {
+  background: linear-gradient(90deg, #BFBDBD 0%, #303030 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulseText {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
 
     
   </style>
@@ -411,15 +469,15 @@
         images: ['images/yona-1.jpg','images/yona-2.jpg','images/yona-3.jpg','images/yona-4.jpg','images/yona-5.jpg','images/yona-6.jpg','images/yona-7.jpg','images/yona-8.jpg','images/yona-9.jpg','images/yona-10.jpg','images/yona-11.jpg','images/yona-12.jpg','images/yona-13.jpg','images/yona-14.jpg','images/yona-15.jpg','images/yona-16.jpg','images/yona-17.jpg','images/yona-18.jpg','images/yona-19.jpg','images/yona-20.jpg']
       },
       'BOSTON': {
-        description: 'Cenas urbanas e arquitetura da histórica cidade de Boston',
-        images: ['images/boston-1.png', 'images/boston-2.png', 'images/boston-3.png']
+        description: 'Echoes of the past. Exploring the quiet dialogue between historic red bricks and the modern pulse of New England, where every cobblestone tells a story of time.',
+        images: []
       },
       'NEW YORK': {
-        description: 'A energia vibrante e diversidade das ruas de Nova York',
+        description: 'Concrete rhythm. Capturing the electric pulse and towering ambition of the streets, where the city’s raw energy transforms the mundane into the cinematic.',
         images: []
       },
       'WINTER': {
-        description: 'Paisagens geladas e a beleza minimalista do inverno',
+        description: 'The art of stillness. Through the lens of the cold, the landscape is stripped to its barest form, revealing the haunting beauty of a world in deep repose.',
         images: []
       }
     };
@@ -456,15 +514,16 @@
 
       const list = data.images || [];
 
-      // Se não houver fotos, gera 8 "slots" vazios para demonstração
-      if (list.length === 0) {
-        for (let i = 1; i <= 8; i++) {
-          const slot = document.createElement('div');
-          slot.className = 'slot fade-in-photo'; // Adiciona animação imediata
-          slot.textContent = 'Foto ' + i;
-          grid.appendChild(slot);
-        }
-      } else {
+           // Se não houver fotos, mostra a mensagem e o carregamento
+            if (list.length === 0) {
+        // Limpa o grid e insere a estrutura
+        grid.innerHTML = `
+          <div class="empty-gallery-msg">
+            <div class="loader"></div>
+            <p>Coming soon.</p>
+          </div>
+        `} else {
+
         // Renderiza as imagens do banco de dados simulado
         list.forEach((src, index) => {
           const slot = document.createElement('div');
@@ -481,7 +540,7 @@
           grid.appendChild(slot);
 
           // Aplica o atraso escalonado da animação
-          slot.style.setProperty('--delay', `${1 + index * 2}s`);
+          slot.style.setProperty('--delay', `${3 + index * 1}s`);
           requestAnimationFrame(() => {
             slot.classList.add('fade-in-photo');
           });
