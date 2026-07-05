@@ -266,11 +266,17 @@
       transition: transform .4s ease, filter .4s ease;
       filter: grayscale(0.2);
       cursor: zoom-in;
+
+      /* ADICIONE ESTAS LINHAS AQUI: */
+      -webkit-touch-callout: none !important; /* Bloqueia menu de salvar no iPhone */
+      -webkit-user-select: none !important;  /* Bloqueia seleção no Android/Chrome */
+      user-select: none !important;
     }
 
     .slot:hover img {
       transform: translateY(-1px) translateX(-1px);
     }
+
 
     /* =========================================
        6. LIGHTBOX (VISUALIZAÇÃO DE IMAGEM)
