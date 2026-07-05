@@ -179,14 +179,35 @@
       letter-spacing: 0.03em;
       margin-bottom: 3rem;
     }
+    
 
-    /* Gradientes Dinâmicos para os Títulos das Galerias */
     .gallery-title.yona-black-white {
-      background: linear-gradient(90deg, #7A7A7A 0%, #ffffff 10%, #2E1A42 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+  /* Criamos um gradiente longo: Cinza -> Roxo -> Roxo */
+  /* O roxo começa lá pelos 50% e vai até o final */
+  background: linear-gradient(90deg, #7A7A7A 0%, #ffffff 0%, var(--accent) 50%, var(--accent) 100%);
+  
+  /* Fazemos o fundo ter 300% da largura do título */
+  background-size: 150% 100% !important;
+  
+  /* Posicionamos o fundo no início (onde está o cinza/branco) */
+  background-position: 0% center !important;
+  
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  
+  /* Transição suave para a posição do fundo */
+  transition: background-position 1s ease-in-out, filter 1s ease;
+}
+
+.gallery-title.yona-black-white:hover {
+  /* Ao passar o mouse, movemos o fundo para o final (onde está o roxo) */
+  background-position: 100% center !important;
+  
+  /* Dá um leve brilho extra nas cores */
+  filter: brightness(1.1);
+}
+
 
     /* Cidades e Inverno (Mesmo gradiente, agrupados para evitar repetição) */
     .gallery-title.boston,
@@ -199,11 +220,22 @@
     }
 
     .gallery-sub {
-      color: var(--text-faint);
-      font-size: 0.8rem;
-      letter-spacing: 0.1em;
-      margin-bottom: 8vh;
-    }
+  color: var(--text-faint);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 8vh;
+  
+  /* Preparação para a animação */
+  transition: all 0.8s ease-in-out;
+  display: inline-block; /* Garante que o efeito de hover foque bem no texto */
+  cursor: default;
+}
+
+.gallery-sub:hover {
+  color: var(--text-bright); /* Acende para o branco/claro */
+  
+ 
+}
 
     .grid {
       display: grid;
@@ -222,7 +254,7 @@
     }
 
     .slot.fade-in-photo {
-      animation: fadeInSoft 3s ease forwards;
+      animation: fadeInSoft 2s ease forwards;
       animation-delay: var(--delay, 0s);
     }
 
@@ -237,8 +269,7 @@
     }
 
     .slot:hover img {
-      transform: translateY(-3px) translateX(-3px);
-      filter: grayscale(0); /* Opcional: tira o P&B ao passar o mouse */
+      transform: translateY(-1px) translateX(-1px);
     }
 
     /* =========================================
@@ -294,6 +325,7 @@
         border: 1px solid #3a3a3a;
       }
     }
+    
   </style>
 </head>
 
@@ -344,8 +376,8 @@
     // 1. DADOS CENTRALIZADOS (Fica muito mais fácil adicionar fotos e textos aqui)
     const galleryData = {
       'YONÁ BLACK WHITE': {
-        description: 'Retratos em preto e branco capturando a essência e personalidade',
-        images: ['images/YONA-1.png','images/YONA-2.png']
+        description: 'Reduce to reveal. By stripping away the color and focusing solely on Yona on the sands of Gloucester, the image transcends ordinary photography.',
+        images: ['images/yona-1.jpg','images/yona-2.jpg','images/yona-3.jpg','images/yona-4.jpg','images/yona-5.jpg','images/yona-6.jpg','images/yona-7.jpg','images/yona-8.jpg','images/yona-9.jpg','images/yona-10.jpg','images/yona-11.jpg','images/yona-12.jpg','images/yona-13.jpg','images/yona-14.jpg','images/yona-15.jpg','images/yona-16.jpg','images/yona-17.jpg','images/yona-18.jpg','images/yona-19.jpg','images/yona-20.jpg']
       },
       'BOSTON': {
         description: 'Cenas urbanas e arquitetura da histórica cidade de Boston',
@@ -451,5 +483,5 @@
       document.getElementById('lightbox').style.display = 'none';
     }
   </script>
-</body>
+<body oncontextmenu="return false;" ondragstart="return false;">
 </html>
