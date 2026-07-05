@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Portraits</title>
+  <title>myphotofolios</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -177,7 +177,7 @@
       font-size: clamp(1.8rem, 5vw, 2.6rem);
       font-weight: 600;
       letter-spacing: 0.03em;
-      margin-bottom: 3rem;
+      margin-bottom: 1.2rem;
     }
     
 
@@ -328,16 +328,35 @@
        7. RESPONSIVIDADE (MOBILE)
        ========================================= */
     @media (max-width: 480px) {
-      .screen { padding: 8vh 15vw 5vh; }
-      #home-inner { margin-top: 20vh; }
-      nav.menu { gap: 1.7rem; }
-      
-      .slot img { /* Ajuste do placeholder no mobile */
-        aspect-ratio: 3/4;
-        background: rgba(255,255,255,0.015);
-        border: 1px solid #3a3a3a;
-      }
-    }
+  /* 1. Mantenha as regras gerais que valem para as duas */
+  .screen { 
+    padding-top: 8vh; 
+    padding-bottom: 5vh; 
+  }
+
+  /* 2. Margem lateral específica para a HOME */
+  #home {
+    padding-left: 15vw;  /* Margem maior na home */
+    padding-right: 15vw;
+  }
+
+  /* 3. Margem lateral específica para a GALERIA */
+  #gallery {
+    padding-left: 8vw;   /* Margem menor para as fotos ocuparem mais espaço */
+    padding-right: 8vw;
+  }
+
+  /* 4. O restante das suas regras mobile continuam aqui */
+  #home-inner { margin-top: 20vh; }
+  nav.menu { gap: 1rem; }
+  
+  .slot img {
+    aspect-ratio: 3/4;
+    background: rgba(255,255,255,0.015);
+    border: 1px solid #3a3a3a;
+  }
+}
+
     
   </style>
 </head>
@@ -362,7 +381,7 @@
         <line x1="19" y1="12" x2="5" y2="12"></line>
         <polyline points="12 19 5 12 12 5"></polyline>
       </svg>
-      Voltar
+      go back
     </button>
     
     <h2 class="gallery-title" id="gallery-title">Categoria</h2>
@@ -375,7 +394,7 @@
         <line x1="19" y1="12" x2="5" y2="12"></line>
         <polyline points="12 19 5 12 12 5"></polyline>
       </svg>
-      Voltar
+      go back
     </button>
   </main>
 
