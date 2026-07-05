@@ -281,7 +281,7 @@
     /* =========================================
        6. LIGHTBOX (VISUALIZAÇÃO DE IMAGEM)
        ========================================= */
-    #lightbox {
+       #lightbox {
       display: none;
       position: fixed;
       z-index: 9999;
@@ -302,7 +302,14 @@
       border-radius: 4px;
       box-shadow: 0 0 20px rgba(0,0,0,0.5);
       cursor: default;
+
+      /* --- ADICIONE ESTAS LINHAS ABAIXO --- */
+      -webkit-touch-callout: none !important; /* Bloqueia o menu de salvar no iPhone */
+      -webkit-user-select: none !important;  /* Bloqueia seleção no Android/Chrome */
+      user-select: none !important;
+      pointer-events: none;                   /* Faz o toque "atravessar" a imagem e tocar no fundo */
     }
+
 
     .close-lightbox {
       position: absolute;
