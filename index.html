@@ -67,16 +67,16 @@
 
     /* Gatilhos de animação da HOME */
     #home .title { animation: fadeInSoft 3s ease forwards 0.1s; }
-    #home .menu-item:nth-child(1) { animation: fadeInSoft 3s ease forwards 0.5s; }
-    #home .menu-item:nth-child(2) { animation: fadeInSoft 3s ease forwards 0.8s; }
-    #home .menu-item:nth-child(3) { animation: fadeInSoft 3s ease forwards 1.1s; }
-    #home .menu-item:nth-child(4) { animation: fadeInSoft 3s ease forwards 1.4s; }
+    #home .menu-item:nth-child(1) { animation: fadeInSoft 3s ease forwards 0.2s; }
+    #home .menu-item:nth-child(2) { animation: fadeInSoft 3s ease forwards 0.4s; }
+    #home .menu-item:nth-child(3) { animation: fadeInSoft 3s ease forwards 0.6s; }
+    #home .menu-item:nth-child(4) { animation: fadeInSoft 3s ease forwards 0.8s; }
     #home .home-footer { animation: fadeInSoft 3s ease forwards 2s; }
 
     /* Gatilhos de animação da GALERIA (ativados via classe .fade-in) */
     #gallery.fade-in .back-btn { animation: fadeInSoft 3s ease forwards 4s; }
-    #gallery.fade-in .gallery-title { animation: fadeInSoft 3s ease forwards 0.5s; }
-    #gallery.fade-in .gallery-sub { animation: fadeInSoft 3s ease forwards 1.5s; }
+    #gallery.fade-in .gallery-title { animation: fadeInSoft 3s ease forwards 0.1s; }
+    #gallery.fade-in .gallery-sub { animation: fadeInSoft 3s ease forwards 1s; }
 
     /* =========================================
        4. TELA PRINCIPAL (HOME)
@@ -483,73 +483,84 @@
     };
 
     // 2. FUNÇÃO: ABRIR GALERIA
-    function openGallery(name) {
-      // Esconde a Home e Mostra a Galeria
-      document.getElementById('home').style.display = 'none';
-      const gallery = document.getElementById('gallery');
-      gallery.style.display = 'flex';
+    // 2. FUNÇÃO: ABRIR GALERIA
+function openGallery(name) {
+  // Esconde a Home e Mostra a Galeria
+  document.getElementById('home').style.display = 'none';
+  const gallery = document.getElementById('gallery');
+  gallery.style.display = 'flex';
 
-      // Reinicia a animação de entrada da galeria
-      gallery.classList.remove('fade-in');
-      void gallery.offsetWidth; // Truque do JS para forçar o reflow do navegador
-      gallery.classList.add('fade-in');
+  // Reinicia a animação de entrada da galeria
+  gallery.classList.remove('fade-in');
+  void gallery.offsetWidth; // Truque do JS para forçar o reflow do navegador
+  gallery.classList.add('fade-in');
 
-      // Pega os dados selecionados baseados no nome do botão clicado
-      const data = galleryData[name];
+  // Pega os dados selecionados baseados no nome do botão clicado
+  const data = galleryData[name];
 
-      // Atualiza o Título e a Classe (para puxar a cor de gradiente certa do CSS)
-      const titleElement = document.getElementById('gallery-title');
-      titleElement.textContent = name;
-      // Transforma "YONÁ BLACK WHITE" em "yona-black-white" para linkar com o CSS
-      const cssClassName = name.toLowerCase().replace(/\s+/g, '-').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-      titleElement.className = `gallery-title ${cssClassName}`;
+  // Atualiza o Título e a Classe (para puxar a cor de gradiente certa do CSS)
+  const titleElement = document.getElementById('gallery-title');
+  titleElement.textContent = name;
+  // Transforma "YONÁ BLACK WHITE" em "yona-black-white" para linkar com o CSS
+  const cssClassName = name.toLowerCase().replace(/\s+/g, '-')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  titleElement.className = `gallery-title ${cssClassName}`;
 
-      // Atualiza o Subtítulo
-      const subElement = document.querySelector('.gallery-sub');
-      subElement.textContent = data.description || 'Adicione suas fotos a esta série';
+  // Atualiza o Subtítulo
+  const subElement = document.querySelector('.gallery-sub');
+  subElement.textContent = data.description || 'Adicione suas fotos a esta série';
 
-      // Limpa as imagens antigas do Grid
-      const grid = document.getElementById('gallery-grid');
-      grid.innerHTML = '';
+  // Limpa as imagens antigas do Grid
+  const grid = document.getElementById('gallery-grid');
+  grid.innerHTML = '';
 
-      const list = data.images || [];
+  const list = data.images || [];
 
-           // Se não houver fotos, mostra a mensagem e o carregamento
-            if (list.length === 0) {
-        // Limpa o grid e insere a estrutura
-        grid.innerHTML = `
-          <div class="empty-gallery-msg">
-            <div class="loader"></div>
-            <p>Coming soon.</p>
-          </div>
-        `} else {
+  // Pega o botão de voltar do final da página
+  const backBtnBottom = document.querySelector('.back-btn-bottom');
 
-        // Renderiza as imagens do banco de dados simulado
-        list.forEach((src, index) => {
-          const slot = document.createElement('div');
-          slot.className = 'slot';
-          
-          const img = document.createElement('img');
-          img.src = src;
-          img.alt = `Portrait de ${name}`;
-          
-          // Adiciona evento de Lightbox ao clicar na imagem
-          img.onclick = () => openLightbox(src);
+  // Se não houver fotos, mostra a mensagem e o carregamento
+  if (list.length === 0) {
+    // Esconde o botão de voltar de baixo
+    if (backBtnBottom) backBtnBottom.style.display = 'none';
 
-          slot.appendChild(img);
-          grid.appendChild(slot);
+    grid.innerHTML = `
+      <div class="empty-gallery-msg">
+        <div class="loader"></div>
+        <p>Coming soon.</p>
+      </div>
+    `;
+  } else {
+    // Garante que o botão de baixo apareça quando houver fotos
+    if (backBtnBottom) backBtnBottom.style.display = 'inline-flex';
 
-          // Aplica o atraso escalonado da animação
-          slot.style.setProperty('--delay', `${3 + index * 1}s`);
-          requestAnimationFrame(() => {
-            slot.classList.add('fade-in-photo');
-          });
-        });
-      }
+    // Renderiza as imagens do banco de dados simulado
+    list.forEach((src, index) => {
+      const slot = document.createElement('div');
+      slot.className = 'slot';
+      
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = `Portrait de ${name}`;
+      
+      // Adiciona evento de Lightbox ao clicar na imagem
+      img.onclick = () => openLightbox(src);
 
-      // Rola a página para o topo suavemente
-      window.scrollTo(0, 0);
-    }
+      slot.appendChild(img);
+      grid.appendChild(slot);
+
+      // Aplica o atraso escalonado da animação
+      slot.style.setProperty('--delay', `${1 + index * 0.8}s`);
+      requestAnimationFrame(() => {
+        slot.classList.add('fade-in-photo');
+      });
+    });
+  }
+
+  // Rola a página para o topo suavemente
+  window.scrollTo(0, 0);
+}
+
 
     // 3. FUNÇÃO: VOLTAR PARA A HOME
     function goHome() {
