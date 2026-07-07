@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>myphotofolios</title>
+  <title>My Photofolios</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
-    /* =========================================
-       1. VARIÁVEIS GERAIS
-       ========================================= */
+    /* --- 1. VARIÁVEIS GERAIS (Paleta de Cores) --- */
     :root {
       --bg-top: #141414;
       --bg-bottom: #000000;
@@ -24,9 +21,7 @@
       --accent-dim: #7d6482;
     }
 
-    /* =========================================
-       2. RESET E CONFIGURAÇÕES GERAIS
-       ========================================= */
+    /* --- 2. RESET BÁSICO (Remove margens padrão do navegador) --- */
     * {
       margin: 0;
       padding: 0;
@@ -35,15 +30,16 @@
 
     html, body {
       height: 100%;
-      background:
-        radial-gradient(circle at 20% 0%, #262626 0%, transparent 45%),
-        linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 55%);
+      /* Fundo com gradiente escuro e fixo */
+      background: radial-gradient(circle at 20% 0%, #262626 0%, transparent 45%),
+                  linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 55%);
       background-attachment: fixed;
       font-family: "Geist", sans-serif;
       color: var(--text-bright);
-      overflow-x: hidden;
+      overflow-x: hidden; /* Evita barra de rolagem horizontal */
     }
 
+    /* --- 3. ESTRUTURA DE TELA (Padrão para Home e Galeria) --- */
     .screen {
       min-height: 100vh;
       width: 100%;
@@ -52,20 +48,26 @@
       padding: 20vh 20vw 10vh;
     }
 
-    /* =========================================
-       3. ANIMAÇÕES
-       ========================================= */
+    /* --- 4. ANIMAÇÕES (Keyframes) --- */
     @keyframes fadeInSoft {
       from { opacity: 0; }
       to   { opacity: 1; }
     }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes pulseText {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
 
-    /* Oculta os elementos inicialmente para a animação */
+    /* Elementos invisíveis por padrão para surgirem com a animação */
     .title, .menu-item, .home-footer, .back-btn, .gallery-title, .gallery-sub {
       opacity: 0;
     }
 
-    /* Gatilhos de animação da HOME */
+    /* Gatilhos de animação da TELA INICIAL (Home) */
     #home .title { animation: fadeInSoft 3s ease forwards 0.1s; }
     #home .menu-item:nth-child(1) { animation: fadeInSoft 3s ease forwards 0.2s; }
     #home .menu-item:nth-child(2) { animation: fadeInSoft 3s ease forwards 0.4s; }
@@ -73,14 +75,12 @@
     #home .menu-item:nth-child(4) { animation: fadeInSoft 3s ease forwards 0.8s; }
     #home .home-footer { animation: fadeInSoft 3s ease forwards 2s; }
 
-    /* Gatilhos de animação da GALERIA (ativados via classe .fade-in) */
+    /* Gatilhos de animação da GALERIA (Ativados via JS com a classe .fade-in) */
     #gallery.fade-in .back-btn { animation: fadeInSoft 3s ease forwards 4s; }
     #gallery.fade-in .gallery-title { animation: fadeInSoft 3s ease forwards 0.1s; }
     #gallery.fade-in .gallery-sub { animation: fadeInSoft 3s ease forwards 1s; }
 
-    /* =========================================
-       4. TELA PRINCIPAL (HOME)
-       ========================================= */
+    /* --- 5. TELA INICIAL (Home) --- */
     #home { display: flex; }
 
     .title {
@@ -119,7 +119,7 @@
 
     .menu-item:hover { transform: translateX(4px); }
 
-    /* Menu Especial: Yoná */
+    /* Estilo especial para o menu "Yoná" */
     .menu-item.yona {
       background: linear-gradient(90deg, #D4D2D2 0%, #ffffff 50%, var(--accent-dim) 100%);
       -webkit-background-clip: text;
@@ -127,19 +127,8 @@
       -webkit-text-fill-color: transparent;
     }
 
-    .home-footer {
-      margin-top: auto;
-      padding-top: 6vh;
-      font-size: 0.7rem;
-      letter-spacing: 0.15em;
-      color: var(--text-faint);
-      text-transform: uppercase;
-    }
-
-    /* =========================================
-       5. TELA DE GALERIA
-       ========================================= */
-    #gallery { display: none; }
+    /* --- 6. TELA DA GALERIA (Fotos) --- */
+    #gallery { display: none; /* Escondida por padrão */ }
 
     .back-btn {
       cursor: pointer;
@@ -162,11 +151,8 @@
       transform: translateX(-4px);
     }
 
-    .back-btn svg {
-      width: 14px;
-      height: 14px;
-    }
-
+    .back-btn svg { width: 14px; height: 14px; }
+    
     .back-btn-bottom {
       margin-top: 10vh;
       margin-bottom: 0;
@@ -179,37 +165,23 @@
       letter-spacing: 0.03em;
       margin-bottom: 1.2rem;
     }
-    
 
+    /* Cores e gradientes dinâmicos para os títulos das galerias */
     .gallery-title.yona-black-white {
-  /* Criamos um gradiente longo: Cinza -> Roxo -> Roxo */
-  /* O roxo começa lá pelos 50% e vai até o final */
-  background: linear-gradient(90deg, #7A7A7A 0%, #ffffff 0%, var(--accent) 50%, var(--accent) 100%);
-  
-  /* Fazemos o fundo ter 300% da largura do título */
-  background-size: 150% 100% !important;
-  
-  /* Posicionamos o fundo no início (onde está o cinza/branco) */
-  background-position: 0% center !important;
-  
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  
-  /* Transição suave para a posição do fundo */
-  transition: background-position 1s ease-in-out, filter 1s ease;
-}
+      background: linear-gradient(90deg, #7A7A7A 0%, #ffffff 0%, var(--accent) 50%, var(--accent) 100%);
+      background-size: 150% 100% !important;
+      background-position: 0% center !important;
+      -webkit-background-clip: text !important;
+      background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+      transition: background-position 1s ease-in-out, filter 1s ease;
+    }
 
-.gallery-title.yona-black-white:hover {
-  /* Ao passar o mouse, movemos o fundo para o final (onde está o roxo) */
-  background-position: 100% center !important;
-  
-  /* Dá um leve brilho extra nas cores */
-  filter: brightness(1.1);
-}
+    .gallery-title.yona-black-white:hover {
+      background-position: 100% center !important;
+      filter: brightness(1.1);
+    }
 
-
-    /* Cidades e Inverno (Mesmo gradiente, agrupados para evitar repetição) */
     .gallery-title.boston,
     .gallery-title.new-york,
     .gallery-title.winter {
@@ -220,42 +192,35 @@
     }
 
     .gallery-sub {
-  color: var(--text-faint);
-  font-size: 0.8rem;
-  letter-spacing: 0.1em;
-  margin-bottom: 8vh;
-  
-  /* Preparação para a animação */
-  transition: all 0.8s ease-in-out;
-  display: inline-block; /* Garante que o efeito de hover foque bem no texto */
-  cursor: default;
-}
+      color: var(--text-faint);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 8vh;
+      transition: all 0.8s ease-in-out;
+      display: inline-block;
+      cursor: default;
+    }
 
-.gallery-sub:hover {
-  color: var(--text-bright); /* Acende para o branco/claro */
-  
- 
-}
+    .gallery-sub:hover { color: var(--text-bright); }
 
+    /* Grid das Fotos */
     .grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, 1fr); /* 2 colunas */
       gap: 1.5rem;
     }
 
-    /* Slots de Imagem */
     .slot {
       border: 4px solid transparent;
       border-radius: 4px;
       overflow: hidden;
       align-self: start;
-      opacity: 0; 
-      padding: 0; /* Removido do JS e trazido pro CSS */
+      opacity: 0; /* Começa invisível para a animação */
     }
 
     .slot.fade-in-photo {
       animation: fadeInSoft 8s ease forwards;
-      animation-delay: var(--delay, 0s);
+      animation-delay: var(--delay, 0s); /* O JS define esse delay dinamicamente */
     }
 
     .slot img {
@@ -266,22 +231,48 @@
       transition: transform .4s ease, filter .4s ease;
       filter: grayscale(0.2);
       cursor: zoom-in;
-
-      /* ADICIONE ESTAS LINHAS AQUI: */
-      -webkit-touch-callout: none !important; /* Bloqueia menu de salvar no iPhone */
-      -webkit-user-select: none !important;  /* Bloqueia seleção no Android/Chrome */
+      /* Bloqueios anti-cópia para as fotos */
+      -webkit-touch-callout: none !important;
+      -webkit-user-select: none !important;
       user-select: none !important;
     }
 
-    .slot:hover img {
-      transform: translateY(-1px) translateX(-1px);
+    .slot:hover img { transform: translateY(-1px) translateX(-1px); }
+
+    /* --- 7. TELA DE ESPERA / SEM FOTOS (Loader) --- */
+    .empty-gallery-msg {
+      grid-column: 1 / -1; /* Faz ocupar a tela toda no grid */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      padding: 10vh 0;
+      opacity: 0;
+      animation: fadeInSoft 3s ease forwards 4s;
     }
 
+    .loader {
+      width: 30px;
+      height: 30px;
+      border: 4px solid rgba(255,255,255,0.1);
+      border-top: 4px solid #303030;
+      border-radius: 50%;
+      animation: spin 8s linear infinite;
+    }
 
-    /* =========================================
-       6. LIGHTBOX (VISUALIZAÇÃO DE IMAGEM)
-       ========================================= */
-       #lightbox {
+    .empty-gallery-msg p {
+      background: linear-gradient(90deg, #BFBDBD 0%, #303030 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+    }
+
+    /* --- 8. LIGHTBOX (Visualizador de foto grande) --- */
+    #lightbox {
       display: none;
       position: fixed;
       z-index: 9999;
@@ -302,14 +293,12 @@
       border-radius: 4px;
       box-shadow: 0 0 20px rgba(0,0,0,0.5);
       cursor: default;
-
-      /* --- ADICIONE ESTAS LINHAS ABAIXO --- */
-      -webkit-touch-callout: none !important; /* Bloqueia o menu de salvar no iPhone */
-      -webkit-user-select: none !important;  /* Bloqueia seleção no Android/Chrome */
+      /* Bloqueios anti-cópia */
+      -webkit-touch-callout: none !important;
+      -webkit-user-select: none !important;
       user-select: none !important;
-      pointer-events: none;                   /* Faz o toque "atravessar" a imagem e tocar no fundo */
+      pointer-events: none; /* Toque "atravessa" a imagem */
     }
-
 
     .close-lightbox {
       position: absolute;
@@ -321,105 +310,33 @@
       cursor: pointer;
       transition: color 0.3s;
     }
-
     .close-lightbox:hover { color: var(--text-bright); }
 
-    /* =========================================
-       7. RESPONSIVIDADE (MOBILE)
-       ========================================= */
+    /* --- 9. RESPONSIVIDADE (Telas menores de celular) --- */
     @media (max-width: 480px) {
-  /* 1. Mantenha as regras gerais que valem para as duas */
-  .screen { 
-    padding-top: 8vh; 
-    padding-bottom: 5vh; 
-  }
-
-  /* 2. Margem lateral específica para a HOME */
-  #home {
-    padding-left: 15vw;  /* Margem maior na home */
-    padding-right: 15vw;
-  }
-
-  /* 3. Margem lateral específica para a GALERIA */
-  #gallery {
-    padding-left: 8vw;   /* Margem menor para as fotos ocuparem mais espaço */
-    padding-right: 8vw;
-  }
-
-  /* 4. O restante das suas regras mobile continuam aqui */
-  #home-inner { margin-top: 20vh; }
-  nav.menu { gap: 1rem; }
-  
-  .slot img {
-    aspect-ratio: 3/4;
-    background: rgba(255,255,255,0.015);
-  }
-}
-/* Container da mensagem de espera */
-.empty-gallery-msg {
-  grid-column: 1 / -1; /* Ocupa as duas colunas do grid */
-  text-align: center;
-  padding: 10vh 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-
-/* 1. O PAI: Controla o surgimento de TUDO (Bolinha + Texto) */
-.empty-gallery-msg {
-  grid-column: 1 / -1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  padding: 10vh 0;
-  
-  /* Aqui dizemos para todo o conjunto surgir suavemente */
-  opacity: 0;
-  animation: fadeInSoft 3s ease forwards 4s;
-}
-
-/* 2. A BOLINHA: Apenas gira */
-.loader {
-  width: 30px;
-  height: 30px;
-  border: 4px solid rgba(255,255,255,0.1);
-  border-top: 4px solid #303030;
-  border-radius: 50%;
-  /* Apenas a animação de girar, sem interferir no surgimento */
-  animation: spin 8s linear infinite;
-}
-
-/* 3. O TEXTO: Apenas o estilo do gradiente */
-.empty-gallery-msg p {
-  background: linear-gradient(90deg, #BFBDBD 0%, #303030 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  font-size: 0.9rem;
-}
-
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@keyframes pulseText {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
-}
-
-
-    
+      .screen { 
+        padding-top: 8vh; 
+        padding-bottom: 5vh; 
+      }
+      #home {
+        padding-left: 15vw;
+        padding-right: 15vw;
+      }
+      #gallery {
+        padding-left: 8vw;
+        padding-right: 8vw;
+      }
+      #home-inner { margin-top: 20vh; }
+      nav.menu { gap: 1rem; }
+      
+      .slot img {
+        background: rgba(255,255,255,0.015);
+      }
+    }
   </style>
 </head>
 
-<body>
+<body oncontextmenu="return false;" ondragstart="return false;">
 
   <main class="screen" id="home">
     <div id="home-inner">
@@ -461,16 +378,25 @@
     <img id="lightbox-img" src="" alt="Foto Expandida" onclick="event.stopPropagation()">
   </div>
 
+
   <script>
-    // 1. DADOS CENTRALIZADOS (Fica muito mais fácil adicionar fotos e textos aqui)
+    /* =========================================================
+       1. BANCO DE DADOS (Aqui você adiciona/remove as fotos)
+       ========================================================= */
     const galleryData = {
       'YONÁ BLACK WHITE': {
         description: 'Reduce to reveal. By stripping away the color and focusing solely on Yona on the sands of Gloucester, the image transcends ordinary photography.',
-        images: ['images/yona-1.jpg','images/yona-2.jpg','images/yona-3.jpg','images/yona-4.jpg','images/yona-5.jpg','images/yona-6.jpg','images/yona-7.jpg','images/yona-8.jpg','images/yona-9.jpg','images/yona-10.jpg','images/yona-11.jpg','images/yona-12.jpg','images/yona-13.jpg','images/yona-14.jpg','images/yona-15.jpg','images/yona-16.jpg','images/yona-17.jpg','images/yona-18.jpg','images/yona-19.jpg','images/yona-20.jpg']
+        images: [
+          'images/yona-1.jpg','images/yona-2.jpg','images/yona-3.jpg','images/yona-4.jpg',
+          'images/yona-5.jpg','images/yona-6.jpg','images/yona-7.jpg','images/yona-8.jpg',
+          'images/yona-9.jpg','images/yona-10.jpg','images/yona-11.jpg','images/yona-12.jpg',
+          'images/yona-13.jpg','images/yona-14.jpg','images/yona-15.jpg','images/yona-16.jpg',
+          'images/yona-17.jpg','images/yona-18.jpg','images/yona-19.jpg','images/yona-20.jpg'
+        ]
       },
       'BOSTON': {
         description: 'Echoes of the past. Exploring the quiet dialogue between historic red bricks and the modern pulse of New England, where every cobblestone tells a story of time.',
-        images: []
+        images: [] /* Array vazio mostra o "Coming Soon" */
       },
       'NEW YORK': {
         description: 'Concrete rhythm. Capturing the electric pulse and towering ambition of the streets, where the city’s raw energy transforms the mundane into the cinematic.',
@@ -482,87 +408,87 @@
       }
     };
 
-    // 2. FUNÇÃO: ABRIR GALERIA
-    // 2. FUNÇÃO: ABRIR GALERIA
-function openGallery(name) {
-  // Esconde a Home e Mostra a Galeria
-  document.getElementById('home').style.display = 'none';
-  const gallery = document.getElementById('gallery');
-  gallery.style.display = 'flex';
+    /* =========================================================
+       2. CONTROLADORES DE TELA (Mudar páginas)
+       ========================================================= */
+       
+    // Função acionada ao clicar em uma categoria no menu
+    function openGallery(name) {
+      // 2.1 Troca a visualização das telas (Oculta Home, Mostra Galeria)
+      document.getElementById('home').style.display = 'none';
+      const gallery = document.getElementById('gallery');
+      gallery.style.display = 'flex';
 
-  // Reinicia a animação de entrada da galeria
-  gallery.classList.remove('fade-in');
-  void gallery.offsetWidth; // Truque do JS para forçar o reflow do navegador
-  gallery.classList.add('fade-in');
+      // 2.2 Truque para reiniciar a animação de "fade" (piscar a tela)
+      gallery.classList.remove('fade-in');
+      void gallery.offsetWidth; 
+      gallery.classList.add('fade-in');
 
-  // Pega os dados selecionados baseados no nome do botão clicado
-  const data = galleryData[name];
+      // 2.3 Busca as informações da categoria clicada no nosso "Banco de Dados" acima
+      const data = galleryData[name];
 
-  // Atualiza o Título e a Classe (para puxar a cor de gradiente certa do CSS)
-  const titleElement = document.getElementById('gallery-title');
-  titleElement.textContent = name;
-  // Transforma "YONÁ BLACK WHITE" em "yona-black-white" para linkar com o CSS
-  const cssClassName = name.toLowerCase().replace(/\s+/g, '-')
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  titleElement.className = `gallery-title ${cssClassName}`;
-
-  // Atualiza o Subtítulo
-  const subElement = document.querySelector('.gallery-sub');
-  subElement.textContent = data.description || 'Adicione suas fotos a esta série';
-
-  // Limpa as imagens antigas do Grid
-  const grid = document.getElementById('gallery-grid');
-  grid.innerHTML = '';
-
-  const list = data.images || [];
-
-  // Pega o botão de voltar do final da página
-  const backBtnBottom = document.querySelector('.back-btn-bottom');
-
-  // Se não houver fotos, mostra a mensagem e o carregamento
-  if (list.length === 0) {
-    // Esconde o botão de voltar de baixo
-    if (backBtnBottom) backBtnBottom.style.display = 'none';
-
-    grid.innerHTML = `
-      <div class="empty-gallery-msg">
-        <div class="loader"></div>
-        <p>Coming soon.</p>
-      </div>
-    `;
-  } else {
-    // Garante que o botão de baixo apareça quando houver fotos
-    if (backBtnBottom) backBtnBottom.style.display = 'inline-flex';
-
-    // Renderiza as imagens do banco de dados simulado
-    list.forEach((src, index) => {
-      const slot = document.createElement('div');
-      slot.className = 'slot';
+      // 2.4 Atualiza o título e ajusta a classe para mudar as cores (via CSS)
+      const titleElement = document.getElementById('gallery-title');
+      titleElement.textContent = name;
       
-      const img = document.createElement('img');
-      img.src = src;
-      img.alt = `Portrait de ${name}`;
-      
-      // Adiciona evento de Lightbox ao clicar na imagem
-      img.onclick = () => openLightbox(src);
+      // Converte ex: "YONÁ BLACK WHITE" em "yona-black-white" para o CSS entender
+      const cssClassName = name.toLowerCase().replace(/\s+/g, '-').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      titleElement.className = `gallery-title ${cssClassName}`;
 
-      slot.appendChild(img);
-      grid.appendChild(slot);
+      // 2.5 Atualiza o textinho descritivo embaixo do título
+      const subElement = document.querySelector('.gallery-sub');
+      subElement.textContent = data.description || 'Adicione suas fotos a esta série';
 
-      // Aplica o atraso escalonado da animação
-      slot.style.setProperty('--delay', `${1 + index * 0.8}s`);
-      requestAnimationFrame(() => {
-        slot.classList.add('fade-in-photo');
-      });
-    });
-  }
+      // 2.6 Limpa as imagens da galeria anterior antes de carregar as novas
+      const grid = document.getElementById('gallery-grid');
+      grid.innerHTML = '';
 
-  // Rola a página para o topo suavemente
-  window.scrollTo(0, 0);
-}
+      const list = data.images || [];
+      const backBtnBottom = document.querySelector('.back-btn-bottom');
 
+      // 2.7 Verifica se tem imagens cadastradas para aquela categoria
+      if (list.length === 0) {
+        // Se NÃO TIVER fotos, oculta botão de baixo e mostra loader
+        if (backBtnBottom) backBtnBottom.style.display = 'none';
 
-    // 3. FUNÇÃO: VOLTAR PARA A HOME
+        grid.innerHTML = `
+          <div class="empty-gallery-msg">
+            <div class="loader"></div>
+            <p>Coming soon.</p>
+          </div>
+        `;
+      } else {
+        // SE TIVER FOTOS, mostra o botão de voltar e desenha as fotos
+        if (backBtnBottom) backBtnBottom.style.display = 'inline-flex';
+
+        list.forEach((src, index) => {
+          // Cria a "caixa" (slot) e a imagem para o HTML
+          const slot = document.createElement('div');
+          slot.className = 'slot';
+          
+          const img = document.createElement('img');
+          img.src = src;
+          img.alt = `Portrait de ${name}`;
+          
+          // Quando clicar na foto, abre na tela inteira
+          img.onclick = () => openLightbox(src);
+
+          slot.appendChild(img);
+          grid.appendChild(slot);
+
+          // Cria um efeito "escadinha" na animação: a foto 2 demora mais que a 1, etc.
+          slot.style.setProperty('--delay', `${1 + index * 0.8}s`);
+          requestAnimationFrame(() => {
+            slot.classList.add('fade-in-photo');
+          });
+        });
+      }
+
+      // 2.8 Sempre que abrir uma nova galeria, joga o usuário lá pro topo da página
+      window.scrollTo(0, 0);
+    }
+
+    // Função acionada ao clicar em "Go Back"
     function goHome() {
       const gallery = document.getElementById('gallery');
       gallery.style.display = 'none';
@@ -572,7 +498,11 @@ function openGallery(name) {
       window.scrollTo(0, 0);
     }
 
-    // 4. FUNÇÕES: LIGHTBOX (Visualizador de imagens grandes)
+    /* =========================================================
+       3. FUNÇÕES DO LIGHTBOX (A Tela Preta com Foto Grande)
+       ========================================================= */
+       
+    // Abre a foto expandida
     function openLightbox(imageSrc) {
       const lightbox = document.getElementById('lightbox');
       const lightboxImg = document.getElementById('lightbox-img');
@@ -580,9 +510,10 @@ function openGallery(name) {
       lightbox.style.display = 'flex';
     }
 
+    // Fecha a foto expandida
     function closeLightbox() {
       document.getElementById('lightbox').style.display = 'none';
     }
   </script>
-<body oncontextmenu="return false;" ondragstart="return false;">
+</body>
 </html>
