@@ -12,6 +12,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
   <style>
     /* --- 2.1 VARIÁVEIS GERAIS ---
       O :root armazena "apelidos" para cores. 
@@ -128,44 +130,57 @@
     .title {
       /* clamp: O texto nunca será menor que 2.4rem, nem maior que 3rem. 
          Ele cresce conforme a largura da tela (6vw) */
-      font-size: clamp(2.4rem, 6vw, 3rem);
-      font-weight: 600;
+      font-size: clamp(3rem, 6vw, 3.7rem);
+      font-weight: 300;
       
       /* A pintura metálica do título "MY PORTRAITS" */
-      background: linear-gradient(90deg, #ffffff 0%, #969595 100%);
+      background: linear-gradient(90deg, #ffffff 0%, #696969 60%);
       -webkit-background-clip: text; /* Corta o fundo no formato das letras */
       background-clip: text;
       color: transparent; /* Deixa o texto invisível para o degradê aparecer */
       
-      margin-bottom: 6vh;
+      margin-bottom: 10vh;
       user-select: none; /* Impede que o usuário "selecione" o texto com o mouse */
     }
 
+    
     nav.menu {
       display: flex;
       flex-direction: column;
-      gap: 25px; /* Distância exata entre um botão e outro */
+      gap: 40px; /* Distância exata entre um botão e outro */
     }
 
-    .menu-item {
-      cursor: pointer;
-      background: none;
-      border: none;
-      font-size: clamp(1.2rem, 4vw, 1.4rem);
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      width: fit-content;
-      
-      /* "transition" suaviza o movimento quando passamos o mouse por cima */
+  .menu-item {
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: clamp(1.2rem, 4vw, 1.4rem);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: transform .35s ease;
+  
+  /* Efeito prata no texto */
+  background: linear-gradient(90deg, #D4D2D2 0%, #ffffff 50%, #969595 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  /* "transition" suaviza o movimento quando passamos o mouse por cima */
       transition: transform .35s ease;
-      
-      /* Efeito prata no texto do menu */
-      background: linear-gradient(90deg, #D4D2D2 0%, #ffffff 50%, #969595 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+
+  /* ===================================================================
+     NOVA LÓGICA DE ALINHAMENTO DO ÍCONE À DIREITA
+     =================================================================== */
+  display: flex;                 /* Transforma o botão em um container flexível */
+  justify-content: space-between;/* Empurra o texto para a extrema esquerda e o ícone para a extrema direita */
+  align-items: center;           /* Alinha o texto e o ícone perfeitamente na mesma altura (vertical) */
+  
+  width: 340px;                  /* LARGURA FIXA: Garante que todos os botões tenham o mesmo tamanho,
+                                    fazendo com que todos os ícones se alinhem na mesma linha vertical.
+                                    Você pode aumentar ou diminuir esse número se quiser o menu mais largo. */
+}
+
 
     /* Ao passar o mouse (hover), o botão vai 4 pixels para a direita (translateX) */
     .menu-item:hover { 
@@ -400,9 +415,9 @@
         padding-left: 8vw; /* Margem menor para as fotos ficarem bem grandes */
         padding-right: 8vw;
       }
-      #home-inner { margin-top: 20vh; }
+      #home-inner { margin-top: 10vh; }
       
-      nav.menu { gap: 1.5rem; } /* Aproxima os botões do menu */
+      nav.menu { gap: 50px; } /* Aproxima os botões do menu */
       
       .slot img {
         background: rgba(255,255,255,0.015); /* Põe um fundinho branco super fraco atrás das fotos para destaque extra */
@@ -416,14 +431,25 @@
 
   <main class="screen" id="home">
     <div id="home-inner">
-      <h1 class="title">MY PORTRAITS</h1>
+      <h1 class="title">MY <br> PORTRAITS</h1>
       
       <nav class="menu">
-        <button class="menu-item yona" onclick="openGallery(this.textContent)">YONÁ BLACK WHITE</button>
-        <button class="menu-item" onclick="openGallery(this.textContent)">BOSTON</button>
-        <button class="menu-item" onclick="openGallery(this.textContent)">NEW YORK</button>
-        <button class="menu-item" onclick="openGallery(this.textContent)">WINTER</button>
-      </nav>
+  <button class="menu-item yona" onclick="openGallery('YONÁ BLACK WHITE')">
+    YONÁ BLACK WHITE <i class="fa-solid fa-angle-right"></i>
+  </button>
+  
+  <button class="menu-item" onclick="openGallery('BOSTON')">
+    BOSTON <i class="fa-solid fa-angle-right"></i>
+  </button>
+  
+  <button class="menu-item" onclick="openGallery('NEW YORK')">
+    NEW YORK <i class="fa-solid fa-angle-right"></i>
+  </button>
+  
+  <button class="menu-item" onclick="openGallery('WINTER')">
+    WINTER <i class="fa-solid fa-angle-right"></i>
+  </button>
+</nav>
       
     </div>
   </main>
