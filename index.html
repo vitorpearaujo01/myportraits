@@ -134,7 +134,7 @@
       font-weight: 300;
       
       /* A pintura metálica do título "MY PORTRAITS" */
-      background: linear-gradient(90deg, #ffffff 0%, #696969 60%);
+      background: linear-gradient(90deg, #ffffff 0%, #696969 70%);
       -webkit-background-clip: text; /* Corta o fundo no formato das letras */
       background-clip: text;
       color: transparent; /* Deixa o texto invisível para o degradê aparecer */
@@ -147,7 +147,7 @@
     nav.menu {
       display: flex;
       flex-direction: column;
-      gap: 40px; /* Distância exata entre um botão e outro */
+      gap: 50px; /* Distância exata entre um botão e outro */
     }
 
   .menu-item {
@@ -155,13 +155,13 @@
   background: none;
   border: none;
   font-size: clamp(1.2rem, 4vw, 1.4rem);
-  font-weight: 500;
+  font-weight:lighter;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   transition: transform .35s ease;
   
   /* Efeito prata no texto */
-  background: linear-gradient(90deg, #D4D2D2 0%, #ffffff 50%, #969595 100%);
+  background: linear-gradient(90deg, #ffffff 0%, #969595 50%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -169,16 +169,14 @@
   /* "transition" suaviza o movimento quando passamos o mouse por cima */
       transition: transform .35s ease;
 
-  /* ===================================================================
-     NOVA LÓGICA DE ALINHAMENTO DO ÍCONE À DIREITA
+/* ===================================================================
+     ALINHAMENTO SEGUINDO A MARGEM DA TELA (COMPUTADOR E CELULAR)
      =================================================================== */
-  display: flex;                 /* Transforma o botão em um container flexível */
-  justify-content: space-between;/* Empurra o texto para a extrema esquerda e o ícone para a extrema direita */
-  align-items: center;           /* Alinha o texto e o ícone perfeitamente na mesma altura (vertical) */
+  display: flex;                 /* Ativa o Flexbox */
+  justify-content: space-between;/* Texto na esquerda, Ícone na extrema direita */
+  align-items: center;           /* Alinha verticalmente no meio */
   
-  width: 340px;                  /* LARGURA FIXA: Garante que todos os botões tenham o mesmo tamanho,
-                                    fazendo com que todos os ícones se alinhem na mesma linha vertical.
-                                    Você pode aumentar ou diminuir esse número se quiser o menu mais largo. */
+  width: 100%;                   /* Faz o botão ocupar toda a largura permitida pelas margens da tela */
 }
 
 
@@ -189,7 +187,7 @@
 
     /* O botão da Yoná tem uma cor roxa misturada no degradê prateado */
     .menu-item.yona {
-      background: linear-gradient(90deg, #D4D2D2 0%, #ffffff 50%, var(--accent-dim) 100%);
+      background: linear-gradient(90deg, #ffffff 0%, var(--accent-dim) 50%);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -236,7 +234,7 @@
       font-size: clamp(1.8rem, 5vw, 2.6rem);
       font-weight: 600;
       letter-spacing: 0.03em;
-      margin-bottom: 1.2rem;
+      margin-bottom: 4vh;
     }
 
     /* --- DEGRADÊS INTELIGENTES PARA OS TÍTULOS DA GALERIA ---
@@ -458,10 +456,7 @@
   <main class="screen" id="gallery">
     
     <button class="back-btn" onclick="goHome()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="19" y1="12" x2="5" y2="12"></line>
-        <polyline points="12 19 5 12 12 5"></polyline>
-      </svg>
+     <i class="fa-solid fa-circle-left"></i>
       go back
     </button>
     
@@ -471,10 +466,7 @@
     <div class="grid" id="gallery-grid"></div>
 
     <button class="back-btn back-btn-bottom" onclick="goHome()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="19" y1="12" x2="5" y2="12"></line>
-        <polyline points="12 19 5 12 12 5"></polyline>
-      </svg>
+   <i class="fa-solid fa-circle-left"></i>
       go back
     </button>
     
