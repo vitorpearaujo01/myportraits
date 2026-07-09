@@ -302,33 +302,55 @@
       filter:drop-shadow(1.7);
     }
 
-    #lightbox {
-      display: none; /* Fica escondido esperando o clique */
-      position: fixed; /* Prende o elemento na tela, ignorando o scroll */
-      z-index: 9999; /* Garante que ficará por cima de ABSOLUTAMENTE TUDO */
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.97); /* Fundo preto 95% transparente (dá pra ver o vulto atrás) */
-      align-items: center; /* Centraliza a foto verticalmente */
-      justify-content: center; /* Centraliza horizontalmente */
-      cursor: zoom-out; /* Mouse de "menos lupa" para fechar */
-    }
+#lightbox {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.97);
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+}
 
-    #lightbox-img {
-      max-width: 90vw; /* Não deixa a foto ultrapassar 90% da largura da tela */
-      max-height: 85vh; /* Não deixa a foto ultrapassar 85% da altura da tela */
-      object-fit: contain; /* Ajusta a foto por inteiro na tela, sem cortar nada */
-      border-radius: 4px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5); /* Sombra escura atrás da foto */
-      cursor: default;
-      /* Bloqueios anti-roubo de imagem */
-      -webkit-touch-callout: none !important;
-      -webkit-user-select: none !important;
-      user-select: none !important;
-      pointer-events: none; /* Faz o seu dedo ou mouse atravessar a foto e clicar no fundo preto para fechar */
-    }
+/* quando abrir, só mostra o fundo, sem animação */
+#lightbox.aberto {
+  display: flex;
+}
+
+/* imagem com fade-in quando o lightbox estiver aberto */
+#lightbox.aberto #lightbox-img {
+  animation: fadeInImg 1.5s ease forwards;
+}
+
+#lightbox-img {
+  max-width: 90vw;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  cursor: default;
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  pointer-events: none;
+}
+
+/* animação só da foto */
+@keyframes fadeInImg {
+  from {
+    opacity: 0;
+   filter: brightness(6);
+  }
+  to {
+    opacity: 1;
+   filter: brightness(1);
+  }
+}
+
 
     .close-lightbox {
       position: absolute; /* Posição livre, não empurra os outros elementos */
@@ -338,7 +360,8 @@
       font-size: 2.5rem;
       cursor: pointer;
     }
-    .close-lightbox:hover { color: var(--text-bright); }
+    .close-lightbox:hover { color: var(--text-bright);
+    transition: .5s ease; }
 
 
     /* --- 2.11 TELA "COMING SOON" (Para categorias sem foto) --- 
@@ -465,7 +488,7 @@
       'YONÁ BLACK WHITE': {
         description: 'Reduce to reveal. By stripping away the color and focusing solely on Yona on the sands of Gloucester, the image transcends ordinary photography.',
         images: [
-          'images/yona-1.jpg','images/yona-2.jpg','images/yona-3.jpg','images/yona-4.jpg',
+          'images/yona-2.jpg','images/yona-2.jpg','images/yona-3.jpg','images/yona-4.jpg',
           'images/yona-5.jpg','images/yona-6.jpg','images/yona-7.jpg','images/yona-8.jpg',
           'images/yona-9.jpg','images/yona-10.jpg','images/yona-11.jpg','images/yona-12.jpg',
           'images/yona-13.jpg','images/yona-14.jpg','images/yona-15.jpg','images/yona-16.jpg',
@@ -606,19 +629,20 @@
     /* --- 4.4 SISTEMA DE TELA CHEIA (LIGHTBOX) ---
     */
     
-    // Quando clicamos na foto no grid, ele recebe o "imageSrc" (o caminho do arquivo)
-    function openLightbox(imageSrc) {
-      const lightbox = document.getElementById('lightbox');         // Pega a tela preta
-      const lightboxImg = document.getElementById('lightbox-img');  // Pega a tag <img> vazia lá dentro
-      
-      lightboxImg.src = imageSrc;         // Injeta o caminho da foto clicada
-      lightbox.style.display = 'flex';    // Mostra a tela preta com a foto grande
-    }
+function openLightbox(imageSrc) {
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
 
-    // Apenas esconde a tela preta quando o usuário clica fora dela
-    function closeLightbox() {
-      document.getElementById('lightbox').style.display = 'none';
-    }
+  lightboxImg.src = imageSrc;        // coloca a foto
+  lightbox.classList.add('aberto');  // ativa o lightbox (fundo + animação da foto)
+}
+
+function closeLightbox() {
+  const lightbox = document.getElementById('lightbox');
+  lightbox.classList.remove('aberto'); // esconde tudo
+}
+
+
     
   </script>
 </body>
