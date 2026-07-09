@@ -161,7 +161,7 @@
   }
 
   .menu-item.yona {
-    background: linear-gradient(90deg, var(--text-bright) 0%, var(--accent) 40%);
+    background: linear-gradient(90deg, var(--text-bright) 0%, var(--accent) 10%);
     background-size: 150%; /* Esticamos o fundo para ele se mover no hover */
     background-clip: text;
     color: transparent;
@@ -317,6 +317,12 @@
     }
 
     #lightbox-img {
+      max-width: 90vw; /* Não deixa a foto ultrapassar 90% da largura da tela */
+      max-height: 85vh; /* Não deixa a foto ultrapassar 85% da altura da tela */
+      object-fit: contain; /* Ajusta a foto por inteiro na tela, sem cortar nada */
+      border-radius: 4px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5); /* Sombra escura atrás da foto */
+      cursor: default;
       /* Bloqueios anti-roubo de imagem */
       -webkit-touch-callout: none !important;
       -webkit-user-select: none !important;
