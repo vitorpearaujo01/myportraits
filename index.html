@@ -96,6 +96,7 @@
     #home .menu-item:nth-child(2) { animation: fadeInSoft 3s ease forwards 0.3s; }
     #home .menu-item:nth-child(3) { animation: fadeInSoft 3s ease forwards 0.4s; }
     #home .menu-item:nth-child(4) { animation: fadeInSoft 3s ease forwards 0.5s; }
+    #home .menu-item:nth-child(5) { animation: fadeInSoft 3s ease forwards 0.6s; }
 
     /* --- 2.7 GATILHOS DE ANIMAÇÃO DA GALERIA ---
       Quando o JS adiciona a classe ".fade-in" no elemento #gallery,
@@ -126,25 +127,26 @@
     .title:hover { filter: brightness(3);}
 
     nav.menu {
-      display: flex;
-      flex-direction: column;
-      gap: 50px;
+      border: non;
+      display: flex;  /* Flexbox para alinhar os botões em linha */
+      flex-direction: column; /* Coloca os botões em coluna (um em cima do outro) */
+      gap: 50px; /* Espaçamento entre os botões */
     }
 
   .menu-item {
+    border:none;
     cursor: pointer;
     background: linear-gradient(90deg, var(--text-bright) 0%, var(--text-faint) 50%);
-    background-clip: text;
+    background-clip: text; /* Faz o fundo do botão ser "recortado" pelo texto */
     color:transparent;
-    border: none;
-    font-size: clamp(1.2rem, 4vw, 1.4rem);
-    font-weight:500;
+    font-size: clamp(1.2rem, 4vw, 1.4rem); /* Tamanho do texto que se ajusta à tela */
+    font-weight: 500; /* Peso da fonte */
     letter-spacing: 0.12em;
     text-transform: uppercase;
     transition: .5s ease;
-    display: flex;                 /* Ativa o Flexbox */
-    justify-content: space-between;/* Texto na esquerda, Ícone na extrema direita */
-    align-items: center;           /* Alinha verticalmente no meio */ 
+    display: flex;    /* Flexbox para alinhar o texto e o ícone */           
+    justify-content: space-between; /* Cola os itens nas extremidades da caixa */
+    align-items: center;     /* Alinha verticalmente o texto e o ícone */    
   }
 
   .menu-item.yona {
@@ -160,6 +162,32 @@
   .menu-item:hover { transform: translateX(4px);}
 
   .menu-item:active { transform: scale(.9); }
+
+/* --- BOTÃO DE COMPARTILHAR (SÓ ÍCONE NA ESQUERDA) --- */
+.share-icon-btn {
+  cursor: pointer;
+  background: none;
+  border: none;
+  margin-left: auto; /* Empurra o botão para a direita */
+  margin-top: 8vh; /* Espaço para desgrudar do menu */
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  animation: fadeInSoft 3s ease forwards 0.6s;
+}
+
+.share-icon-btn i {
+  font-size: 1.8rem; /* Mesmo tamanho do seu botão de voltar */
+  background: linear-gradient(90deg, var(--text-bright) 0%, var(--text-faint) 50%);
+  background-clip: text; /* Faz o fundo do botão ser "recortado" pelo texto */
+  color:transparent;
+  transition: all 0.4s ease;
+}
+
+/* Efeito ao passar o mouse */
+.share-icon-btn:hover i {
+  transform: scale(1.1);
+}
 
 
 
@@ -261,7 +289,8 @@
       overflow: hidden;
       align-self: start;
       opacity: 0; /* Começa invisível para surgir com animação */
-      transition: all .5s ease-in-out; 
+      transition: all .5s ease-in-out;
+      border-radius: 10px;
     }
 
     /* O JS adiciona essa classe nas fotos, respeitando o atraso (delay) calculado matematicamente */
@@ -412,7 +441,7 @@
     <div id="home-inner">
       <h1 class="title">MY <br> PORTRAITS</h1>
       
-      <nav class="menu">
+     <nav class="menu">
   <button class="menu-item yona" onclick="openGallery('YONÁ BLACK WHITE')">
     YONÁ BLACK WHITE <i class="fi fi-sr-angle-right"></i>
   </button>
@@ -428,6 +457,10 @@
   <button class="menu-item" onclick="openGallery('WINTER')">
     WINTER <i class="fi fi-sr-angle-right"></i>
   </button>
+
+  <button class="share-icon-btn" onclick="shareWebsite()">
+      <i class="fi fi-rr-refer-arrow"></i>
+    </button>
 </nav>
       
     </div>
@@ -620,7 +653,30 @@ function closeLightbox() {
   lightbox.classList.remove('aberto'); // esconde tudo
 }
 
+/* --- 4.5 SISTEMA DE COMPARTILHAMENTO --- */
+function shareWebsite() {
+  // Os dados que serão compartilhados
+  const shareData = {
+    title: 'My Photofolios',
+    text: 'Confira meu portfólio de fotografia!',
+    url: 'https://myphotofolios.com'
+  };
 
+  // Verifica se o navegador/dispositivo suporta a função de compartilhamento nativa
+  if (navigator.share) {
+    navigator.share(shareData)
+      .then(() => console.log('Site compartilhado com sucesso!'))
+      .catch((error) => console.log('Erro ao compartilhar:', error));
+  } else {
+    // Plano B: Se o navegador for muito antigo ou não suportar (ex: alguns desktops),
+    // ele apenas copia o link automaticamente.
+    navigator.clipboard.writeText(shareData.url).then(() => {
+      alert('Link copiado para a área de transferência!');
+    }).catch((err) => {
+      console.error('Falha ao copiar o link: ', err);
+    });
+  }
+}
     
   </script>
 </body>
