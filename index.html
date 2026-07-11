@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3.3.1/css/all/all.min.css">
 
   <style>
     /* --- 2.1 VARIÁVEIS GERAIS ---
@@ -39,13 +39,12 @@
       box-sizing: border-box;
     }
 
-    /* --- 2.3 CORPO DO SITE ---
-      Aqui definimos a cara geral do fundo e a fonte do site.
-    */
+   
     html, body {
   height: 100%;
   background: radial-gradient(circle at 20% 0%, #262626 0%, transparent 75%),
               linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 55%);
+              
   background-attachment: fixed;
   font-family: "Geist", sans-serif;
   color: var(--text-bright);
@@ -69,6 +68,7 @@
       "fadeInSoft" faz algo ir da invisibilidade (opacity 0) para visível (opacity 1).
       "spin" faz um círculo girar 360 graus.
     */
+
     @keyframes fadeInSoft {
       from { opacity: 0; }
       to   { opacity: 1; }
@@ -169,35 +169,34 @@
       display: none; /* Inicia escondida. O JS vai mudar isso para "flex" ao clicar */
     }
 
-    .back-btn {
-      cursor: pointer;
-      background: none;
-      border: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem; /* Espaço entre a setinha e o texto "go back" */
-      color: var(--text-faint);
-      font-size: 1rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 6vh;
-      width: fit-content;
-      transition: .8s ease;
-    }
+   .back-btn {
+  cursor: pointer;
+  background: none;
+  border: none;
+  margin-bottom: 6vh;
+  width: fit-content;
+  transition: .8s ease;
+  display: flex;
+  align-items: center;
+}
 
-    .back-btn:hover {
-      color: var(--text-dim);
-      transform: translateX(-4px);
-    }
-    .back-btn:active {
-      transform: scale(.9);
-    }
+/* Controla o ícone do Flaticon diretamente como texto */
+.back-btn i {
+  font-size: 1.8rem;          /* Define o tamanho do ícone */
+  color: var(--text-faint);   /* Usa a sua cor cinza elegante original */
+  transition: transform 0.4s ease, color 0.4s ease;
+}
 
-    .back-btn-bottom {
-      margin-top: 10vh;
-      align-self: flex-start;
-    }
+/* Efeito ao passar o mouse */
+.back-btn:hover i {
+  color: var(--text-bright);  /* Acende para o branco puro do seu tema */
+  transform: translateX(-4px); /* Deslocamento sutil para a esquerda */
+}
+
+/* Efeito ao clicar */
+.back-btn:active i {
+  transform: scale(0.9);
+}
 
     .gallery-title {
       cursor:default;
@@ -236,8 +235,8 @@
     .gallery-sub {
       cursor: default;
       color: var(--text-faint);
-      font-size: 1rem;
-      letter-spacing: 0.07em;
+      font-size: clamp(1rem, 1.5vw, 1.5rem);
+      letter-spacing: 0.02em;
       margin-bottom: 8vh;
       transition: 0.8s ease;
     }
@@ -252,6 +251,7 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr); /* Divide o espaço em 2 colunas iguais */
       gap: 1.5rem; /* Espaçamento entre as fotos */
+      margin-bottom: 6vh;
     }
 
     /* A "caixa" invisível que segura a foto */
@@ -414,19 +414,19 @@
       
       <nav class="menu">
   <button class="menu-item yona" onclick="openGallery('YONÁ BLACK WHITE')">
-    YONÁ BLACK WHITE <i class="fa-solid fa-angle-right"></i>
+    YONÁ BLACK WHITE <i class="fi fi-sr-angle-right"></i>
   </button>
   
   <button class="menu-item" onclick="openGallery('BOSTON')">
-    BOSTON <i class="fa-solid fa-angle-right"></i>
+    BOSTON <i class="fi fi-sr-angle-right"></i>
   </button>
   
   <button class="menu-item" onclick="openGallery('NEW YORK')">
-    NEW YORK <i class="fa-solid fa-angle-right"></i>
+    NEW YORK <i class="fi fi-sr-angle-right"></i>
   </button>
   
   <button class="menu-item" onclick="openGallery('WINTER')">
-    WINTER <i class="fa-solid fa-angle-right"></i>
+    WINTER <i class="fi fi-sr-angle-right"></i>
   </button>
 </nav>
       
@@ -437,8 +437,7 @@
   <main class="screen" id="gallery">
     
     <button class="back-btn" onclick="goHome()">
-     <i class="fa-solid fa-circle-left"></i>
-      go back
+     <i class="fi fi-rr-arrow-left"></i>
     </button>
     
     <h2 class="gallery-title" id="gallery-title"></h2>
@@ -447,8 +446,7 @@
     <div class="grid" id="gallery-grid"></div>
 
     <button class="back-btn back-btn-bottom" onclick="goHome()">
-   <i class="fa-solid fa-circle-left"></i>
-      go back
+     <i class="fi fi-rr-arrow-left"></i>
     </button>
     
   </main>
@@ -479,7 +477,7 @@
           'images/yona-17.jpg','images/yona-18.jpg','images/yona-19.jpg','images/yona-20.jpg']
       },
       'BOSTON': {
-        description: 'Echoes of the past. Exploring the quiet dialogue between historic red bricks and the modern pulse of New England, where every cobblestone tells a story of time.',
+        description: 'Boston in contrast: the taut steel of the Zakim Bridge on one side, a heron among lily pads on the other. Late-afternoon light, silhouettes along the Charles, and a gesture that repeats, the world seen through circles, as if each frame were also about the act of looking. Water, low light, few people. Boston from the side, not head-on.',
         images: ['images/boston-1.png','images/boston-2.png','images/boston-3.png','images/boston-4.png',
                  'images/boston-5.png','images/boston-6.png','images/boston-7.png','images/boston-8.png',
                  'images/boston-9.png','images/boston-10.png','images/boston-11.png','images/boston-12.png'] 
@@ -579,10 +577,6 @@
           // 4. Enfia a tag da foto dentro da div "slot", e depois enfia o slot dentro do Grid do site
           slot.appendChild(img);
           grid.appendChild(slot);
-
-          // 5. Calcula matematicamente o atraso da animação.
-          // O índice (index) começa em 0. Então a primeira foto demora 1s, a segunda 1.8s, a terceira 2.6s...
-          slot.style.setProperty('--delay', `${1 + index * 0.8}s`);
           
           // O requestAnimationFrame garante que o navegador só ative a animação quando a foto estiver na tela
           requestAnimationFrame(() => {
