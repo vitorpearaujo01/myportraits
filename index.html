@@ -165,8 +165,12 @@
 
 /* --- BOTÃO DE COMPARTILHAR (SÓ ÍCONE NA ESQUERDA) --- */
 .share-icon-btn {
+  font-size: 1rem;
+  letter-spacing: 0.04em;
   cursor: pointer;
-  background: none;
+  background: linear-gradient(90deg, var(--text-bright) 0%, var(--text-faint) 50%);
+  background-clip: text; /* Faz o fundo do botão ser "recortado" pelo texto */
+  color:transparent;
   border: none;
   margin-left: auto; /* Empurra o botão para a direita */
   margin-top: 8vh; /* Espaço para desgrudar do menu */
@@ -174,20 +178,10 @@
   display: flex;
   align-items: center;
   animation: fadeInSoft 3s ease forwards 0.6s;
+  gap: 8px; /* Espaço entre o texto e o ícone */
 }
 
-.share-icon-btn i {
-  font-size: 1.8rem; /* Mesmo tamanho do seu botão de voltar */
-  background: linear-gradient(90deg, var(--text-bright) 0%, var(--text-faint) 50%);
-  background-clip: text; /* Faz o fundo do botão ser "recortado" pelo texto */
-  color:transparent;
-  transition: all 0.4s ease;
-}
 
-/* Efeito ao passar o mouse */
-.share-icon-btn:hover i {
-  transform: scale(1.1);
-}
 
 
 
@@ -458,9 +452,7 @@
     WINTER <i class="fi fi-sr-angle-right"></i>
   </button>
 
-  <button class="share-icon-btn" onclick="shareWebsite()">
-      <i class="fi fi-rr-refer-arrow"></i>
-    </button>
+  <button class="share-icon-btn" onclick="shareWebsite()">Share <i class="fi fi-rr-refer-arrow"></i></button>
 </nav>
       
     </div>
