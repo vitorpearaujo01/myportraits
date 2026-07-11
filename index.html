@@ -82,7 +82,7 @@
     /* Deixamos esses elementos invisíveis desde o início. 
       Eles só vão aparecer quando a animação fadeInSoft for chamada neles.
     */
-    .title, .menu-item, .home-footer, .back-btn, .gallery-title, .gallery-sub {
+    .title, .menu-item, .home-footer, .back-btn, .gallery-title, .gallery-sub, .share-icon-btn {
       opacity: 0;
     }
 
@@ -96,7 +96,7 @@
     #home .menu-item:nth-child(2) { animation: fadeInSoft 3s ease forwards 0.3s; }
     #home .menu-item:nth-child(3) { animation: fadeInSoft 3s ease forwards 0.4s; }
     #home .menu-item:nth-child(4) { animation: fadeInSoft 3s ease forwards 0.5s; }
-    #home .menu-item:nth-child(5) { animation: fadeInSoft 3s ease forwards 0.6s; }
+    #home .share-icon-btn { animation: fadeInSoft 3s ease forwards 0.6s; }
 
     /* --- 2.7 GATILHOS DE ANIMAÇÃO DA GALERIA ---
       Quando o JS adiciona a classe ".fade-in" no elemento #gallery,
@@ -167,17 +167,16 @@
 .share-icon-btn {
   font-size: 1rem;
   letter-spacing: 0.04em;
+  font-weight: 400;
   cursor: pointer;
-  background: linear-gradient(90deg, var(--text-bright) 0%, var(--text-faint) 50%);
   background-clip: text; /* Faz o fundo do botão ser "recortado" pelo texto */
-  color:transparent;
+  color:var(--text-faint);
   border: none;
   margin-left: auto; /* Empurra o botão para a direita */
   margin-top: 8vh; /* Espaço para desgrudar do menu */
   width: fit-content;
   display: flex;
   align-items: center;
-  animation: fadeInSoft 3s ease forwards 0.6s;
   gap: 8px; /* Espaço entre o texto e o ícone */
 }
 
@@ -452,7 +451,7 @@
     WINTER <i class="fi fi-sr-angle-right"></i>
   </button>
 
-  <button class="share-icon-btn" onclick="shareWebsite()">Share <i class="fi fi-rr-refer-arrow"></i></button>
+  <button class="share-icon-btn" onclick="shareWebsite()"></button>
 </nav>
       
     </div>
@@ -497,8 +496,9 @@
         images: [
           'images/yona-1.jpg','images/yona-2.jpg','images/yona-3.jpg','images/yona-4.jpg',
           'images/yona-5.jpg','images/yona-6.jpg','images/yona-7.jpg','images/yona-8.jpg',
-          'images/yona-9.jpg','images/yona-10.jpg',
-          'images/yona-13.jpg','images/yona-14.jpg','images/yona-15.jpg','images/yona-16.jpg',
+          'images/yona-9.jpg','images/yona-10.jpg','images/yona-11.jpg','images/yona-12.jpg',
+          'images/yona-13.jpg','images/yona-14.jpg','images/yona-14A.jpg','images/yona-14B.jpg',
+          'images/yona-15.jpg','images/yona-16.jpg',
           'images/yona-17.jpg','images/yona-18.jpg','images/yona-19.jpg','images/yona-20.jpg']
       },
       'BOSTON': {
