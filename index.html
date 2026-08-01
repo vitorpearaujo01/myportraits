@@ -358,22 +358,15 @@
     .grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      /* Divide o espaço em 2 colunas iguais */
       gap: 1.5rem;
-      /* Espaçamento entre as fotos */
-      margin-bottom: 6vh;
+      margin-bottom: 10vh;
     }
 
-    /* A "caixa" invisível que segura a foto */
     .slot {
-      border: 4px solid transparent;
-      border-radius: 4px;
       overflow: hidden;
       align-self: start;
       opacity: 0;
-      /* Começa invisível para surgir com animação */
       transition: all .5s ease-in-out;
-      border-radius: 10px;
     }
 
     /* O JS adiciona essa classe nas fotos, respeitando o atraso (delay) calculado matematicamente */
@@ -386,7 +379,6 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      /* Faz a foto preencher a caixa sem distorcer (cortando as bordas se necessário) */
       display: block;
       cursor: zoom-in;
 
@@ -429,7 +421,6 @@
       max-width: 90vw;
       max-height: 85vh;
       object-fit: contain;
-      border-radius: 4px;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
       cursor: default;
       -webkit-touch-callout: none !important;
@@ -572,7 +563,7 @@
   <main class="screen" id="gallery">
 
     <button class="back-btn" onclick="goHome()">
-      <i class="fi fi-rr-arrow-left"></i>
+      <i class="fi fi-rs-arrow-left"></i>
     </button>
 
     <h2 class="gallery-title" id="gallery-title"></h2>
@@ -581,7 +572,7 @@
     <div class="grid" id="gallery-grid"></div>
 
     <button class="back-btn back-btn-bottom" onclick="goHome()">
-      <i class="fi fi-rr-arrow-left"></i>
+      <i class="fi fi-rs-arrow-left"></i>
     </button>
 
   </main>
