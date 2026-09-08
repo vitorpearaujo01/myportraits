@@ -401,9 +401,15 @@
       top: 0;
       width: 100%;
       height: 100%;
+      height: 100dvh;
       background-color: rgba(0, 0, 0, 0.97);
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 20px;
+      padding: 72px 0 24px;
+      padding-top: calc(72px + env(safe-area-inset-top, 0px));
+      padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
       cursor: zoom-out;
       overflow: hidden;
       overscroll-behavior: contain;
@@ -422,8 +428,11 @@
     }
 
     #lightbox-img {
+      display: block;
+      flex: 0 0 auto;
       max-width: 90vw;
-      max-height: 85vh;
+      max-height: calc(100vh - 168px);
+      max-height: calc(100dvh - 168px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
       object-fit: contain;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
       cursor: grab;
@@ -445,7 +454,6 @@
 
     .close-lightbox,
     .lightbox-arrow {
-      position: absolute;
       z-index: 1;
       display: grid;
       place-items: center;
@@ -463,7 +471,9 @@
     }
 
     .close-lightbox {
-      top: 3vh;
+      position: absolute;
+      top: 16px;
+      top: calc(16px + env(safe-area-inset-top, 0px));
       right: 5vw;
       font-size: 2.5rem;
     }
@@ -474,17 +484,33 @@
       background: rgba(30, 30, 30, .7);
     }
 
-    .lightbox-arrow {
-      top: 50%;
-      transform: translateY(-50%);
+    /* A navegação fica sempre no fluxo, em uma linha abaixo da imagem. */
+    #lightbox .lightbox-controls {
+      position: static;
+      display: flex;
+      flex: 0 0 auto;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      cursor: default;
     }
 
-    .lightbox-prev { left: 1vw; }
-    .lightbox-next { right: 1vw; }
+    #lightbox .lightbox-controls .lightbox-arrow {
+      position: static;
+      inset: auto;
+      transform: none;
+      flex: 0 0 48px;
+      background: rgba(255, 255, 255, .035);
+      border: 1px solid rgba(255, 255, 255, .08);
+    }
+
+    #lightbox .lightbox-controls .lightbox-arrow:hover:not(:disabled) {
+      background: rgba(255, 255, 255, .09);
+    }
 
     .lightbox-arrow svg {
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
       pointer-events: none;
     }
 
@@ -502,11 +528,14 @@
       outline-offset: 4px;
     }
 
-    .lightbox-counter {
-      position: absolute;
-      bottom: max(2.5vh, env(safe-area-inset-bottom));
-      left: 50%;
-      transform: translateX(-50%);
+    #lightbox .lightbox-counter {
+      position: static;
+      inset: auto;
+      transform: none;
+      min-width: 64px;
+      text-align: center;
+      letter-spacing: .08em;
+      white-space: nowrap;
       color: var(--text-dim);
       font-size: .875rem;
       font-variant-numeric: tabular-nums;
@@ -641,16 +670,18 @@
 
   <div id="lightbox" role="dialog" aria-modal="true" aria-label="Visualizador de fotos" aria-hidden="true" tabindex="-1">
     <button class="close-lightbox" type="button" data-lightbox-action="close" aria-label="Fechar foto">&times;</button>
-    <button class="lightbox-arrow lightbox-prev" type="button" data-lightbox-action="prev" aria-label="Foto anterior">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m15 5-7 7 7 7" /></svg>
-    </button>
 
     <img id="lightbox-img" alt="Foto ampliada" draggable="false">
 
-    <button class="lightbox-arrow lightbox-next" type="button" data-lightbox-action="next" aria-label="Próxima foto">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m9 5 7 7-7 7" /></svg>
-    </button>
-    <p class="lightbox-counter" id="lightbox-counter" aria-live="polite" aria-atomic="true"></p>
+    <div class="lightbox-controls">
+      <button class="lightbox-arrow lightbox-prev" type="button" data-lightbox-action="prev" aria-label="Foto anterior">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m15 5-7 7 7 7" /></svg>
+      </button>
+      <p class="lightbox-counter" id="lightbox-counter" aria-live="polite" aria-atomic="true"></p>
+      <button class="lightbox-arrow lightbox-next" type="button" data-lightbox-action="next" aria-label="Próxima foto">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m9 5 7 7-7 7" /></svg>
+      </button>
+    </div>
   </div>
 
 
