@@ -363,21 +363,66 @@
     }
 
     .slot {
+      position: relative;
       overflow: hidden;
       align-self: start;
-      opacity: 0;
+      opacity: 1;
       transition: all .5s ease-in-out;
     }
 
-    /* O JS adiciona essa classe nas fotos, respeitando o atraso (delay) calculado matematicamente */
-    .slot.fade-in-photo {
-      animation: fadeInSoft 1s ease forwards;
+    /* As fotos aparecem juntas depois de carregadas e decodificadas. */
+    .slot.fade-in-photo img {
+      animation: fadeInSoft .65s ease forwards;
+    }
+
+    .slot.is-loading,
+    .slot.has-error {
+      aspect-ratio: var(--photo-ratio, 3 / 4);
+      background: #1b1b1b;
+    }
+
+    .slot.is-loading::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(100deg,
+        transparent 15%, rgba(255, 255, 255, .075) 50%, transparent 85%);
+      transform: translateX(-100%);
+      animation: galleryShimmer 1.8s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .slot.is-loading img {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .slot.has-error {
+      display: grid;
+      place-items: center;
+    }
+
+    .slot.has-error img { display: none; }
+
+    .slot-error {
+      padding: 16px;
+      color: var(--text-dim);
+      font-size: .875rem;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    @keyframes galleryShimmer {
+      to { transform: translateX(100%); }
     }
 
     /* A Foto de fato */
     .slot img {
       width: 100%;
-      height: 100%;
+      height: auto;
       object-fit: cover;
       display: block;
       cursor: zoom-in;
@@ -388,7 +433,7 @@
       user-select: none !important;
     }
 
-    .slot:hover {
+    .slot:not(.is-loading):not(.has-error):hover {
       transform: scale(1.02);
       filter: drop-shadow(1.7);
     }
@@ -544,6 +589,9 @@
 
     @media (prefers-reduced-motion: reduce) {
       #lightbox-img { transition: none; }
+      .slot { transition: none; }
+      .slot.is-loading::before,
+      .slot.fade-in-photo img { animation: none; }
     }
 
 
@@ -659,7 +707,7 @@
     <h2 class="gallery-title" id="gallery-title"></h2>
     <p class="gallery-sub"></p>
 
-    <div class="grid" id="gallery-grid"></div>
+    <div class="grid" id="gallery-grid" role="group" aria-label="Fotos da galeria" aria-busy="false"></div>
 
     <button class="back-btn back-btn-bottom" onclick="goHome()">
       <i class="fi fi-rs-arrow-left"></i>
@@ -725,7 +773,51 @@
     /* --- 4.2 LÓGICA DE ABRIR A GALERIA ---
       Essa função recebe o "name" (O nome do botão clicado) e faz toda a transformação visual.
     */
+    let galleryRequestId = 0;
+    const galleryImageRatios = new Map();
+
+    // Cada tentativa sempre termina: sucesso, erro ou limite de um minuto.
+    function loadGalleryImage(img, src) {
+      return new Promise((resolve) => {
+        let finished = false;
+        let decoding = false;
+        const finish = (loaded) => {
+          if (finished) return;
+          finished = true;
+          clearTimeout(timeoutId);
+          img.removeEventListener('load', handleLoad);
+          img.removeEventListener('error', handleError);
+          resolve(loaded);
+        };
+        const handleLoad = async () => {
+          if (finished || decoding) return;
+          decoding = true;
+          try {
+            if (typeof img.decode === 'function') await img.decode();
+            finish(img.naturalWidth > 0 && img.naturalHeight > 0);
+          } catch {
+            finish(false);
+          }
+        };
+        const handleError = () => finish(false);
+        const timeoutId = setTimeout(handleError, 60000);
+
+        img.addEventListener('load', handleLoad);
+        img.addEventListener('error', handleError);
+        img.decoding = 'async';
+        img.loading = 'eager';
+        img.src = src;
+
+        // Imagens já armazenadas no navegador também passam pela decodificação.
+        if (img.complete) {
+          if (img.naturalWidth > 0) handleLoad();
+          else handleError();
+        }
+      });
+    }
+
     function openGallery(name) {
+      const requestId = ++galleryRequestId;
 
       // A) Esconde a tela principal buscando o id "home" e cortando sua exibição (none)
       document.getElementById('home').style.display = 'none';
@@ -762,8 +854,9 @@
 
       // I) Separa a lista de imagens (se não existir, usa uma lista vazia [])
       const list = data.images || [];
-      activeGalleryImages = list;
+      activeGalleryImages = [];
       activeGalleryName = name;
+      grid.setAttribute('aria-busy', list.length > 0 ? 'true' : 'false');
       const backBtnBottom = document.querySelector('.back-btn-bottom');
 
       /* --- MODO MENSAGEM "COMING SOON" --- 
@@ -788,37 +881,66 @@
         // Garante que o botão de voltar inferior vai aparecer
         if (backBtnBottom) backBtnBottom.style.display = 'inline-flex';
 
-        // Para cada (forEach) imagem cadastrada, ele vai rodar esse bloquinho:
-        list.forEach((src, index) => {
-
-          // 1. Cria uma caixa <div class="slot"> pelo JS
+        // Os blocos aparecem imediatamente, antes de iniciar os downloads.
+        const loadingPhotos = list.map((src, index) => {
           const slot = document.createElement('div');
-          slot.className = 'slot';
+          slot.className = 'slot is-loading';
+          slot.setAttribute('aria-hidden', 'true');
+          if (galleryImageRatios.has(src)) {
+            slot.style.setProperty('--photo-ratio', galleryImageRatios.get(src));
+          }
 
-          // 2. Cria a tag <img src="..." alt="..."> da foto
           const img = document.createElement('img');
-          img.src = src;
           img.alt = `Portrait de ${name}`;
-
-          // 3. Abre na posição clicada para navegar pelas fotos desta mesma série.
-          img.tabIndex = 0;
-          img.setAttribute('role', 'button');
+          img.tabIndex = -1;
           img.setAttribute('aria-label', `Ampliar foto ${index + 1} de ${name}`);
-          img.onclick = () => openLightbox(index, img);
-          img.onkeydown = (event) => {
-            if (event.key === 'Enter' || event.key === ' ') {
-              event.preventDefault();
-              openLightbox(index, img);
-            }
-          };
-
-          // 4. Enfia a tag da foto dentro da div "slot", e depois enfia o slot dentro do Grid do site
           slot.appendChild(img);
           grid.appendChild(slot);
 
-          // O requestAnimationFrame garante que o navegador só ative a animação quando a foto estiver na tela
+          return loadGalleryImage(img, src).then((loaded) => {
+            if (loaded) {
+              const ratio = `${img.naturalWidth} / ${img.naturalHeight}`;
+              galleryImageRatios.set(src, ratio);
+              slot.style.setProperty('--photo-ratio', ratio);
+            }
+            return { src, img, slot, loaded };
+          });
+        });
+
+        Promise.all(loadingPhotos).then((photos) => {
+          // Impede uma série antiga de alterar a galeria se você mudar de tela.
+          if (requestId !== galleryRequestId) return;
           requestAnimationFrame(() => {
-            slot.classList.add('fade-in-photo');
+            if (requestId !== galleryRequestId) return;
+            activeGalleryImages = photos.filter((photo) => photo.loaded).map((photo) => photo.src);
+            let nextImageIndex = 0;
+
+            photos.forEach(({ img, slot, loaded }) => {
+              slot.classList.remove('is-loading');
+              slot.removeAttribute('aria-hidden');
+
+              if (loaded) {
+                const imageIndex = nextImageIndex++;
+                img.tabIndex = 0;
+                img.setAttribute('role', 'button');
+                img.onclick = () => openLightbox(imageIndex, img);
+                img.onkeydown = (event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    openLightbox(imageIndex, img);
+                  }
+                };
+                slot.classList.add('fade-in-photo');
+              } else {
+                slot.classList.add('has-error');
+                const message = document.createElement('p');
+                message.className = 'slot-error';
+                message.textContent = 'Foto indisponível';
+                slot.appendChild(message);
+              }
+            });
+
+            grid.setAttribute('aria-busy', 'false');
           });
         });
       }
@@ -831,6 +953,7 @@
     /* --- 4.3 LÓGICA DE VOLTAR PARA A HOME ---
     */
     function goHome() {
+      galleryRequestId++;
       // Pega a galeria, esconde ela, e remove a classe de animação
       const gallery = document.getElementById('gallery');
       gallery.style.display = 'none';
