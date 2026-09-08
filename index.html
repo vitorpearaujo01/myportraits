@@ -405,6 +405,9 @@
       align-items: center;
       justify-content: center;
       cursor: zoom-out;
+      overflow: hidden;
+      overscroll-behavior: contain;
+      touch-action: pan-y pinch-zoom;
     }
 
     /* quando abrir, só mostra o fundo, sem animação */
@@ -412,9 +415,10 @@
       display: flex;
     }
 
-    /* imagem com fade-in quando o lightbox estiver aberto */
-    #lightbox.aberto #lightbox-img {
-      animation: fadeInImg 1s ease forwards;
+    /* Evita rolar a galeria atrás da foto ampliada. */
+    html.lightbox-open,
+    html.lightbox-open body {
+      overflow: hidden;
     }
 
     #lightbox-img {
@@ -422,38 +426,95 @@
       max-height: 85vh;
       object-fit: contain;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-      cursor: default;
+      cursor: grab;
       -webkit-touch-callout: none !important;
       -webkit-user-select: none !important;
       user-select: none !important;
+      -webkit-user-drag: none;
+      transition: transform .25s ease;
+    }
+
+    #lightbox.is-dragging,
+    #lightbox.is-dragging #lightbox-img {
+      cursor: grabbing;
+    }
+
+    #lightbox.is-dragging #lightbox-img {
+      transition: none;
+    }
+
+    .close-lightbox,
+    .lightbox-arrow {
+      position: absolute;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, .4);
+      color: var(--text-dim);
+      font-family: inherit;
+      line-height: 1;
+      cursor: pointer;
+      transition: color .25s ease, background .25s ease;
+    }
+
+    .close-lightbox {
+      top: 3vh;
+      right: 5vw;
+      font-size: 2.5rem;
+    }
+
+    .close-lightbox:hover,
+    .lightbox-arrow:hover:not(:disabled) {
+      color: var(--text-bright);
+      background: rgba(30, 30, 30, .7);
+    }
+
+    .lightbox-arrow {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .lightbox-prev { left: 1vw; }
+    .lightbox-next { right: 1vw; }
+
+    .lightbox-arrow svg {
+      width: 24px;
+      height: 24px;
       pointer-events: none;
     }
 
-    /* animação só da foto */
-    @keyframes fadeInImg {
-      from {
-        opacity: 0;
-      }
-
-      to {
-        opacity: 1;
-      }
+    .lightbox-arrow:disabled {
+      opacity: .25;
+      cursor: default;
     }
 
+    .lightbox-arrow[hidden] { display: none; }
 
-    .close-lightbox {
+    .close-lightbox:focus-visible,
+    .lightbox-arrow:focus-visible,
+    .slot img:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+    }
+
+    .lightbox-counter {
       position: absolute;
-      /* Posição livre, não empurra os outros elementos */
-      top: 3vh;
-      right: 5vw;
+      bottom: max(2.5vh, env(safe-area-inset-bottom));
+      left: 50%;
+      transform: translateX(-50%);
       color: var(--text-dim);
-      font-size: 2.5rem;
-      cursor: pointer;
+      font-size: .875rem;
+      font-variant-numeric: tabular-nums;
+      pointer-events: none;
     }
 
-    .close-lightbox:hover {
-      color: var(--text-bright);
-      transition: .5s ease;
+    @media (prefers-reduced-motion: reduce) {
+      #lightbox-img { transition: none; }
     }
 
 
@@ -578,10 +639,18 @@
   </main>
 
 
-  <div id="lightbox" onclick="closeLightbox()">
-    <span class="close-lightbox">&times;</span>
+  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Visualizador de fotos" aria-hidden="true" tabindex="-1">
+    <button class="close-lightbox" type="button" data-lightbox-action="close" aria-label="Fechar foto">&times;</button>
+    <button class="lightbox-arrow lightbox-prev" type="button" data-lightbox-action="prev" aria-label="Foto anterior">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m15 5-7 7 7 7" /></svg>
+    </button>
 
-    <img id="lightbox-img" src="" alt="Foto Expandida" onclick="event.stopPropagation()">
+    <img id="lightbox-img" alt="Foto ampliada" draggable="false">
+
+    <button class="lightbox-arrow lightbox-next" type="button" data-lightbox-action="next" aria-label="Próxima foto">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m9 5 7 7-7 7" /></svg>
+    </button>
+    <p class="lightbox-counter" id="lightbox-counter" aria-live="polite" aria-atomic="true"></p>
   </div>
 
 
@@ -662,6 +731,8 @@
 
       // I) Separa a lista de imagens (se não existir, usa uma lista vazia [])
       const list = data.images || [];
+      activeGalleryImages = list;
+      activeGalleryName = name;
       const backBtnBottom = document.querySelector('.back-btn-bottom');
 
       /* --- MODO MENSAGEM "COMING SOON" --- 
@@ -698,8 +769,17 @@
           img.src = src;
           img.alt = `Portrait de ${name}`;
 
-          // 3. Diz que ao clicar nesta foto exata, deve abrir o visualizador enviando a URL dela
-          img.onclick = () => openLightbox(src);
+          // 3. Abre na posição clicada para navegar pelas fotos desta mesma série.
+          img.tabIndex = 0;
+          img.setAttribute('role', 'button');
+          img.setAttribute('aria-label', `Ampliar foto ${index + 1} de ${name}`);
+          img.onclick = () => openLightbox(index, img);
+          img.onkeydown = (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              openLightbox(index, img);
+            }
+          };
 
           // 4. Enfia a tag da foto dentro da div "slot", e depois enfia o slot dentro do Grid do site
           slot.appendChild(img);
@@ -734,18 +814,186 @@
     /* --- 4.4 SISTEMA DE TELA CHEIA (LIGHTBOX) ---
     */
 
-    function openLightbox(imageSrc) {
-      const lightbox = document.getElementById('lightbox');
-      const lightboxImg = document.getElementById('lightbox-img');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxPrev = lightbox.querySelector('.lightbox-prev');
+    const lightboxNext = lightbox.querySelector('.lightbox-next');
+    const lightboxClose = lightbox.querySelector('.close-lightbox');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let activeGalleryImages = [];
+    let activeGalleryName = '';
+    let currentImageIndex = 0;
+    let returnFocus = null;
+    let swipe = null;
+    let suppressSwipeClick = false;
+    let imageAnimation = null;
 
-      lightboxImg.src = imageSrc;        // coloca a foto
-      lightbox.classList.add('aberto');  // ativa o lightbox (fundo + animação da foto)
+    function showLightboxImage(direction = 0) {
+      if (imageAnimation) imageAnimation.cancel();
+      lightboxImg.style.transform = '';
+      lightboxImg.src = activeGalleryImages[currentImageIndex];
+      lightboxImg.alt = `${activeGalleryName} — foto ${currentImageIndex + 1} de ${activeGalleryImages.length}`;
+      document.getElementById('lightbox-counter').textContent = `${currentImageIndex + 1} / ${activeGalleryImages.length}`;
+      lightboxPrev.disabled = currentImageIndex === 0;
+      lightboxNext.disabled = currentImageIndex === activeGalleryImages.length - 1;
+      lightboxPrev.hidden = lightboxNext.hidden = activeGalleryImages.length < 2;
+
+      if (!reducedMotion.matches && lightboxImg.animate) {
+        imageAnimation = lightboxImg.animate([
+          { opacity: 0, transform: `translateX(${direction * 60}px)` },
+          { opacity: 1, transform: 'translateX(0)' }
+        ], { duration: direction ? 280 : 400, easing: 'ease-out' });
+      }
+
+      // Antecipa o carregamento das vizinhas para a troca ficar mais rápida.
+      [currentImageIndex - 1, currentImageIndex + 1].forEach((index) => {
+        if (activeGalleryImages[index]) {
+          const image = new Image();
+          image.src = activeGalleryImages[index];
+        }
+      });
+    }
+
+    function openLightbox(index, trigger) {
+      if (!activeGalleryImages[index]) return;
+      currentImageIndex = index;
+      returnFocus = trigger || document.activeElement;
+      suppressSwipeClick = false;
+      lightbox.classList.add('aberto');
+      lightbox.setAttribute('aria-hidden', 'false');
+      document.documentElement.classList.add('lightbox-open');
+      document.getElementById('home').inert = true;
+      document.getElementById('gallery').inert = true;
+      showLightboxImage();
+      lightboxClose.focus({ preventScroll: true });
+    }
+
+    function changeLightboxImage(direction) {
+      if (!lightbox.classList.contains('aberto')) return;
+      const nextIndex = currentImageIndex + direction;
+      if (nextIndex < 0 || nextIndex >= activeGalleryImages.length) return;
+      currentImageIndex = nextIndex;
+      showLightboxImage(direction);
+    }
+
+    function resetSwipe() {
+      const previousSwipe = swipe;
+      swipe = null;
+      lightbox.classList.remove('is-dragging');
+      lightboxImg.style.transform = '';
+      if (previousSwipe && lightbox.hasPointerCapture(previousSwipe.pointerId)) {
+        lightbox.releasePointerCapture(previousSwipe.pointerId);
+      }
     }
 
     function closeLightbox() {
-      const lightbox = document.getElementById('lightbox');
-      lightbox.classList.remove('aberto'); // esconde tudo
+      if (!lightbox.classList.contains('aberto')) return;
+      resetSwipe();
+      if (imageAnimation) imageAnimation.cancel();
+      lightbox.classList.remove('aberto');
+      document.documentElement.classList.remove('lightbox-open');
+      document.getElementById('home').inert = false;
+      document.getElementById('gallery').inert = false;
+      if (returnFocus && returnFocus.isConnected) returnFocus.focus({ preventScroll: true });
+      lightbox.setAttribute('aria-hidden', 'true');
     }
+
+    // Um arrasto não deve virar um clique no fundo e fechar a foto.
+    lightbox.addEventListener('click', (event) => {
+      if (suppressSwipeClick && event.detail !== 0) {
+        suppressSwipeClick = false;
+        event.preventDefault();
+        return;
+      }
+      const button = event.target.closest('[data-lightbox-action]');
+      if (button && !button.disabled) {
+        const action = button.dataset.lightboxAction;
+        if (action === 'close') closeLightbox();
+        else changeLightboxImage(action === 'next' ? 1 : -1);
+      } else if (event.target === lightbox) {
+        closeLightbox();
+      }
+    });
+
+    // Pointer Events funcionam com dedo, mouse e caneta.
+    lightbox.addEventListener('pointerdown', (event) => {
+      if (!event.isPrimary) {
+        resetSwipe();
+        suppressSwipeClick = true;
+        return;
+      }
+      suppressSwipeClick = false;
+      if (event.button !== 0 || event.target.closest('button')) return;
+      if (window.visualViewport && window.visualViewport.scale > 1) return;
+      if (imageAnimation) imageAnimation.cancel();
+      swipe = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, dragging: false };
+    });
+
+    lightbox.addEventListener('pointermove', (event) => {
+      if (!swipe || event.pointerId !== swipe.pointerId) return;
+      const dx = event.clientX - swipe.x;
+      const dy = event.clientY - swipe.y;
+      if (!swipe.dragging && Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+        swipe.dragging = true;
+        lightbox.setPointerCapture(event.pointerId);
+        lightbox.classList.add('is-dragging');
+      }
+      if (!swipe.dragging) return;
+      event.preventDefault();
+      const atEdge = (currentImageIndex === 0 && dx > 0) ||
+        (currentImageIndex === activeGalleryImages.length - 1 && dx < 0);
+      lightboxImg.style.transform = `translateX(${dx * (atEdge ? .2 : .85)}px)`;
+    });
+
+    lightbox.addEventListener('pointerup', (event) => {
+      if (!swipe || event.pointerId !== swipe.pointerId) return;
+      const dx = event.clientX - swipe.x;
+      const dy = event.clientY - swipe.y;
+      const didDrag = swipe.dragging;
+      resetSwipe();
+      suppressSwipeClick = didDrag;
+      const minimumSwipe = Math.min(80, window.innerWidth * .15);
+      if (didDrag && Math.abs(dx) >= minimumSwipe && Math.abs(dx) > Math.abs(dy) * 1.2) {
+        changeLightboxImage(dx < 0 ? 1 : -1);
+      }
+    });
+
+    ['pointercancel', 'lostpointercapture'].forEach((type) => {
+      lightbox.addEventListener(type, (event) => {
+        // No toque, a captura inicial pode sair da imagem e passar para o fundo.
+        if (type === 'lostpointercapture' && event.target !== lightbox) return;
+        if (swipe && event.pointerId === swipe.pointerId) {
+          suppressSwipeClick = true;
+          resetSwipe();
+        }
+      });
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (!lightbox.classList.contains('aberto')) return;
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeLightbox();
+      } else if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+        event.preventDefault();
+        resetSwipe();
+        changeLightboxImage(event.key === 'ArrowRight' ? 1 : -1);
+      } else if (event.key === 'Tab') {
+        const buttons = [lightboxClose, lightboxPrev, lightboxNext].filter((button) => !button.disabled && !button.hidden);
+        const first = buttons[0];
+        const last = buttons[buttons.length - 1];
+        if (!buttons.includes(document.activeElement)) {
+          event.preventDefault();
+          (event.shiftKey ? last : first).focus();
+        } else if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    });
 
     /* --- 4.5 SISTEMA DE COMPARTILHAMENTO --- */
     function shareWebsite() {
