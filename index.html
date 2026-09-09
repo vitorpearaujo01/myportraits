@@ -370,7 +370,7 @@
       transition: all .5s ease-in-out;
     }
 
-    /* As fotos aparecem juntas depois de carregadas e decodificadas. */
+    /* As fotos aparecem juntas depois de concluídos os downloads. */
     .slot.fade-in-photo img {
       animation: fadeInSoft .65s ease forwards;
     }
@@ -774,50 +774,82 @@
       Essa função recebe o "name" (O nome do botão clicado) e faz toda a transformação visual.
     */
     let galleryRequestId = 0;
+    let galleryLoadController = null;
     const galleryImageRatios = new Map();
 
-    // Cada tentativa sempre termina: sucesso, erro ou limite de um minuto.
-    function loadGalleryImage(img, src) {
+    // Ajuste aqui quantas fotos podem baixar ao mesmo tempo.
+    const GALLERY_SIMULTANEOUS_LOADS = 4;
+    const GALLERY_IMAGE_TIMEOUT_MS = 60000;
+
+    function loadGalleryImage(img, src, signal) {
       return new Promise((resolve) => {
         let finished = false;
-        let decoding = false;
+        let timeoutId;
+        const hasLoaded = () => img.complete && img.naturalWidth > 0 && img.naturalHeight > 0;
+
         const finish = (loaded) => {
           if (finished) return;
           finished = true;
           clearTimeout(timeoutId);
           img.removeEventListener('load', handleLoad);
           img.removeEventListener('error', handleError);
+          signal.removeEventListener('abort', handleAbort);
+          if (!loaded) img.removeAttribute('src');
           resolve(loaded);
         };
-        const handleLoad = async () => {
-          if (finished || decoding) return;
-          decoding = true;
-          try {
-            if (typeof img.decode === 'function') await img.decode();
-            finish(img.naturalWidth > 0 && img.naturalHeight > 0);
-          } catch {
-            finish(false);
-          }
-        };
+        // O evento load confirma o download. O navegador cuida da decodificação
+        // conforme precisa exibir cada foto, sem forçar todas na memória de uma vez.
+        const handleLoad = () => finish(hasLoaded());
         const handleError = () => finish(false);
-        const timeoutId = setTimeout(handleError, 60000);
+        const handleAbort = () => finish(false);
+
+        if (signal.aborted) {
+          finish(false);
+          return;
+        }
 
         img.addEventListener('load', handleLoad);
         img.addEventListener('error', handleError);
+        signal.addEventListener('abort', handleAbort, { once: true });
+        // O prazo começa apenas quando esta foto sai da fila de carregamento.
+        timeoutId = setTimeout(() => finish(hasLoaded()), GALLERY_IMAGE_TIMEOUT_MS);
         img.decoding = 'async';
         img.loading = 'eager';
         img.src = src;
 
-        // Imagens já armazenadas no navegador também passam pela decodificação.
+        // Fotos do cache também são reconhecidas, sem chamar img.decode().
         if (img.complete) {
-          if (img.naturalWidth > 0) handleLoad();
+          if (hasLoaded()) handleLoad();
           else handleError();
         }
       });
     }
 
+    async function loadGalleryPhotos(photos, signal) {
+      let nextPhotoIndex = 0;
+      const loadNextPhotos = async () => {
+        while (!signal.aborted && nextPhotoIndex < photos.length) {
+          const photo = photos[nextPhotoIndex++];
+          photo.loaded = await loadGalleryImage(photo.img, photo.src, signal);
+          if (signal.aborted) return;
+          if (photo.loaded) {
+            const ratio = `${photo.img.naturalWidth} / ${photo.img.naturalHeight}`;
+            galleryImageRatios.set(photo.src, ratio);
+            photo.slot.style.setProperty('--photo-ratio', ratio);
+          }
+        }
+      };
+
+      const workerCount = Math.min(GALLERY_SIMULTANEOUS_LOADS, photos.length);
+      await Promise.all(Array.from({ length: workerCount }, loadNextPhotos));
+      return photos;
+    }
+
     function openGallery(name) {
       const requestId = ++galleryRequestId;
+      if (galleryLoadController) galleryLoadController.abort();
+      galleryLoadController = new AbortController();
+      const signal = galleryLoadController.signal;
 
       // A) Esconde a tela principal buscando o id "home" e cortando sua exibição (none)
       document.getElementById('home').style.display = 'none';
@@ -882,7 +914,7 @@
         if (backBtnBottom) backBtnBottom.style.display = 'inline-flex';
 
         // Os blocos aparecem imediatamente, antes de iniciar os downloads.
-        const loadingPhotos = list.map((src, index) => {
+        const photos = list.map((src, index) => {
           const slot = document.createElement('div');
           slot.className = 'slot is-loading';
           slot.setAttribute('aria-hidden', 'true');
@@ -897,17 +929,11 @@
           slot.appendChild(img);
           grid.appendChild(slot);
 
-          return loadGalleryImage(img, src).then((loaded) => {
-            if (loaded) {
-              const ratio = `${img.naturalWidth} / ${img.naturalHeight}`;
-              galleryImageRatios.set(src, ratio);
-              slot.style.setProperty('--photo-ratio', ratio);
-            }
-            return { src, img, slot, loaded };
-          });
+          return { src, img, slot, loaded: false };
         });
 
-        Promise.all(loadingPhotos).then((photos) => {
+        // Mantém todos os skeletons até a fila terminar, preservando a ordem das fotos.
+        loadGalleryPhotos(photos, signal).then((photos) => {
           // Impede uma série antiga de alterar a galeria se você mudar de tela.
           if (requestId !== galleryRequestId) return;
           requestAnimationFrame(() => {
@@ -954,6 +980,8 @@
     */
     function goHome() {
       galleryRequestId++;
+      if (galleryLoadController) galleryLoadController.abort();
+      galleryLoadController = null;
       // Pega a galeria, esconde ela, e remove a classe de animação
       const gallery = document.getElementById('gallery');
       gallery.style.display = 'none';
