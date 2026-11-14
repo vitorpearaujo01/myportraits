@@ -190,11 +190,9 @@
     .menu-item {
       border: none;
       cursor: pointer;
-      background: linear-gradient(90deg, var(--text-bright) 0%, var(--text-faint) 50%);
-      background-clip: text;
-      /* Faz o fundo do botão ser "recortado" pelo texto */
-      color: transparent;
-      font-size: clamp(1.2rem, 4vw, 1.4rem);
+      background: none;
+      color: #ffffff;
+      font-size: clamp(1.3rem, 4vw, 1.4rem);
       /* Tamanho do texto que se ajusta à tela */
       font-weight: 500;
       /* Peso da fonte */
@@ -498,7 +496,7 @@
       padding: 0;
       border: 0;
       background: none;
-      color: #ffffff;
+      color: var(--text-dim);
       font-family: inherit;
       line-height: 1;
       cursor: pointer;
@@ -510,7 +508,7 @@
       top: 16px;
       top: calc(16px + env(safe-area-inset-top, 0px));
       right: 5vw;
-      font-size: 2.5rem;
+      font-size: 20px;
     }
 
     .close-lightbox:hover,
@@ -541,7 +539,7 @@
 
 
     .lightbox-arrow i {
-      color: #ffffff;
+      color: var(--text-dim);
       font-size: 52px;
       pointer-events: none;
     }
