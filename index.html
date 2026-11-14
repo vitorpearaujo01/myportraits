@@ -193,31 +193,20 @@
       background: none;
       color: #ffffff;
       font-size: clamp(1.3rem, 4vw, 1.4rem);
-      /* Tamanho do texto que se ajusta à tela */
       font-weight: 500;
-      /* Peso da fonte */
       letter-spacing: 0.12em;
       text-transform: uppercase;
       transition: .5s ease;
       display: flex;
       /* Flexbox para alinhar o texto e o ícone */
       justify-content: space-between;
-      /* Cola os itens nas extremidades da caixa */
       align-items: center;
-      /* Alinha verticalmente o texto e o ícone */
     }
 
     .menu-item.yona {
-      background: linear-gradient(90deg, var(--text-bright) 0%, var(--accent) 10%);
-      background-size: 150%;
-      /* Esticamos o fundo para ele se mover no hover */
-      background-clip: text;
-      color: transparent;
+      background: none;
+      color: #A68DF5;
       transition: .5s ease-out;
-    }
-
-    .menu-item.yona:hover {
-      background-position: 100% center;
     }
 
     .menu-item:hover {
@@ -295,18 +284,12 @@
     }
 
     .gallery-title.yona-black-white {
-      background: linear-gradient(90deg, var(--text-bright) 0%, var(--accent) 50%);
-      background-size: 150%;
-      /* Esticamos o fundo para ele se mover no hover */
+      background: linear-gradient(90deg, #A68DF5 0%, #cabaff 50%);
       background-clip: text;
       color: transparent;
       transition: all 1s ease-in-out;
     }
 
-    .gallery-title.yona-black-white:hover {
-      background-position: 100% center;
-      filter: brightness(1.1);
-    }
 
     .gallery-title.boston,
     .gallery-title.new-york,
