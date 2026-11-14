@@ -386,7 +386,7 @@
       position: absolute;
       inset: 0;
       background: linear-gradient(100deg,
-        transparent 15%, rgba(255, 255, 255, .075) 50%, transparent 85%);
+          transparent 15%, rgba(255, 255, 255, .075) 50%, transparent 85%);
       transform: translateX(-100%);
       animation: galleryShimmer 1.8s ease-in-out infinite;
       pointer-events: none;
@@ -405,7 +405,9 @@
       place-items: center;
     }
 
-    .slot.has-error img { display: none; }
+    .slot.has-error img {
+      display: none;
+    }
 
     .slot-error {
       padding: 16px;
@@ -416,7 +418,9 @@
     }
 
     @keyframes galleryShimmer {
-      to { transform: translateX(100%); }
+      to {
+        transform: translateX(100%);
+      }
     }
 
     /* A Foto de fato */
@@ -536,7 +540,7 @@
       flex: 0 0 auto;
       align-items: center;
       justify-content: center;
-      gap: 16px;
+      gap: 86px;
       cursor: default;
     }
 
@@ -545,17 +549,14 @@
       inset: auto;
       transform: none;
       flex: 0 0 48px;
-      background: rgba(255, 255, 255, .035);
-      border: 1px solid rgba(255, 255, 255, .08);
+      background: none;
+      border: none;
     }
 
-    #lightbox .lightbox-controls .lightbox-arrow:hover:not(:disabled) {
-      background: rgba(255, 255, 255, .09);
-    }
 
-    .lightbox-arrow svg {
-      width: 22px;
-      height: 22px;
+    .lightbox-arrow i {
+      color: #98191F;
+      font-size: 52px;
       pointer-events: none;
     }
 
@@ -564,7 +565,9 @@
       cursor: default;
     }
 
-    .lightbox-arrow[hidden] { display: none; }
+    .lightbox-arrow[hidden] {
+      display: none;
+    }
 
     .close-lightbox:focus-visible,
     .lightbox-arrow:focus-visible,
@@ -573,25 +576,20 @@
       outline-offset: 4px;
     }
 
-    #lightbox .lightbox-counter {
-      position: static;
-      inset: auto;
-      transform: none;
-      min-width: 64px;
-      text-align: center;
-      letter-spacing: .08em;
-      white-space: nowrap;
-      color: var(--text-dim);
-      font-size: .875rem;
-      font-variant-numeric: tabular-nums;
-      pointer-events: none;
-    }
 
     @media (prefers-reduced-motion: reduce) {
-      #lightbox-img { transition: none; }
-      .slot { transition: none; }
+      #lightbox-img {
+        transition: none;
+      }
+
+      .slot {
+        transition: none;
+      }
+
       .slot.is-loading::before,
-      .slot.fade-in-photo img { animation: none; }
+      .slot.fade-in-photo img {
+        animation: none;
+      }
     }
 
 
@@ -716,18 +714,18 @@
   </main>
 
 
-  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Visualizador de fotos" aria-hidden="true" tabindex="-1">
+  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Visualizador de fotos" aria-hidden="true"
+    tabindex="-1">
     <button class="close-lightbox" type="button" data-lightbox-action="close" aria-label="Fechar foto">&times;</button>
 
     <img id="lightbox-img" alt="Foto ampliada" draggable="false">
 
     <div class="lightbox-controls">
       <button class="lightbox-arrow lightbox-prev" type="button" data-lightbox-action="prev" aria-label="Foto anterior">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m15 5-7 7 7 7" /></svg>
+        <i class="fi fi-sr-angle-left"></i>
       </button>
-      <p class="lightbox-counter" id="lightbox-counter" aria-live="polite" aria-atomic="true"></p>
       <button class="lightbox-arrow lightbox-next" type="button" data-lightbox-action="next" aria-label="Próxima foto">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m9 5 7 7-7 7" /></svg>
+        <i class="fi fi-sr-angle-right"></i>
       </button>
     </div>
   </div>
