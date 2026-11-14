@@ -26,7 +26,7 @@
       /* Preto puro para o final do fundo */
       --text-bright: #f2f2f2;
       /* Branco quase puro para textos principais */
-      --text-dim: #8f8f8f;
+      --text-dim: #bebebe;
       /* Cinza médio para textos secundários */
       --text-faint: #5c5c5c;
       /* Cinza escuro para detalhes discretos */
@@ -143,7 +143,7 @@
       esses textos começam a surgir suavemente.
     */
     #gallery.fade-in .back-btn {
-      animation: fadeInSoft 1s ease forwards 4s;
+      animation: fadeInSoft 1s ease forwards 2s;
     }
 
     #gallery.fade-in .gallery-title {
@@ -275,10 +275,8 @@
 
     /* Controla o ícone do Flaticon diretamente como texto */
     .back-btn i {
-      font-size: 1.8rem;
-      /* Define o tamanho do ícone */
-      color: var(--text-faint);
-      /* Usa a sua cor cinza elegante original */
+      font-size: 2.5rem;
+      color: var(--text-dim);
       transition: transform 0.4s ease, color 0.4s ease;
     }
 
@@ -288,11 +286,6 @@
       /* Acende para o branco puro do seu tema */
       transform: translateX(-4px);
       /* Deslocamento sutil para a esquerda */
-    }
-
-    /* Efeito ao clicar */
-    .back-btn:active i {
-      transform: scale(0.9);
     }
 
     .gallery-title {
@@ -340,15 +333,11 @@
 
     .gallery-sub {
       cursor: default;
-      color: var(--text-faint);
+      color: var(--text-dim);
       font-size: clamp(1rem, 1.5vw, 1.5rem);
       letter-spacing: 0.02em;
       margin-bottom: 8vh;
       transition: 0.8s ease;
-    }
-
-    .gallery-sub:hover {
-      color: #BFBDBD;
     }
 
 
@@ -509,7 +498,7 @@
       padding: 0;
       border: 0;
       background: none;
-      color: #98191F;
+      color: #ffffff;
       font-family: inherit;
       line-height: 1;
       cursor: pointer;
@@ -552,13 +541,13 @@
 
 
     .lightbox-arrow i {
-      color: #98191F;
+      color: #ffffff;
       font-size: 52px;
       pointer-events: none;
     }
 
     .lightbox-arrow:disabled {
-      opacity: .25;
+      opacity: .15;
       cursor: default;
     }
 
