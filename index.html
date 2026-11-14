@@ -506,13 +506,10 @@
       z-index: 1;
       display: grid;
       place-items: center;
-      width: 48px;
-      height: 48px;
       padding: 0;
       border: 0;
-      border-radius: 50%;
-      background: rgba(0, 0, 0, .4);
-      color: var(--text-dim);
+      background: none;
+      color: #98191F;
       font-family: inherit;
       line-height: 1;
       cursor: pointer;
@@ -542,15 +539,15 @@
       justify-content: center;
       gap: 86px;
       cursor: default;
+      margin-top: 20px;
     }
 
     #lightbox .lightbox-controls .lightbox-arrow {
       position: static;
       inset: auto;
       transform: none;
-      flex: 0 0 48px;
       background: none;
-      border: none;
+
     }
 
 
@@ -665,542 +662,541 @@
   </style>
 </head>
 
-<body oncontextmenu="return false;" ondragstart="return false;">
 
 
-  <main class="screen" id="home">
-    <div id="home-inner">
-      <h1 class="title">MY <br> PORTRAITS</h1>
+<main class="screen" id="home">
+  <div id="home-inner">
+    <h1 class="title">MY <br> PORTRAITS</h1>
 
-      <nav class="menu">
-        <button class="menu-item yona" onclick="openGallery('YONÁ BLACK WHITE')">
-          YONÁ BLACK WHITE <i class="fi fi-sr-angle-right"></i>
-        </button>
-
-        <button class="menu-item" onclick="openGallery('BOSTON')">
-          BOSTON <i class="fi fi-sr-angle-right"></i>
-        </button>
-
-        <button class="menu-item" onclick="openGallery('NEW YORK')">
-          NEW YORK <i class="fi fi-sr-angle-right"></i>
-        </button>
-
-        <button class="menu-item" onclick="openGallery('WINTER')">
-          WINTER <i class="fi fi-sr-angle-right"></i>
-        </button>
-
-        <button class="share-icon-btn" onclick="shareWebsite()"></button>
-      </nav>
-
-    </div>
-  </main>
-
-
-  <main class="screen" id="gallery">
-
-    <button class="back-btn" onclick="goHome()">
-      <i class="fi fi-rs-arrow-left"></i>
-    </button>
-
-    <h2 class="gallery-title" id="gallery-title"></h2>
-    <p class="gallery-sub"></p>
-
-    <div class="grid" id="gallery-grid" role="group" aria-label="Fotos da galeria" aria-busy="false"></div>
-
-    <button class="back-btn back-btn-bottom" onclick="goHome()">
-      <i class="fi fi-rs-arrow-left"></i>
-    </button>
-
-  </main>
-
-
-  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Visualizador de fotos" aria-hidden="true"
-    tabindex="-1">
-    <button class="close-lightbox" type="button" data-lightbox-action="close" aria-label="Fechar foto">&times;</button>
-
-    <img id="lightbox-img" alt="Foto ampliada" draggable="false">
-
-    <div class="lightbox-controls">
-      <button class="lightbox-arrow lightbox-prev" type="button" data-lightbox-action="prev" aria-label="Foto anterior">
-        <i class="fi fi-sr-angle-left"></i>
+    <nav class="menu">
+      <button class="menu-item yona" onclick="openGallery('YONÁ BLACK WHITE')">
+        YONÁ BLACK WHITE <i class="fi fi-sr-angle-right"></i>
       </button>
-      <button class="lightbox-arrow lightbox-next" type="button" data-lightbox-action="next" aria-label="Próxima foto">
-        <i class="fi fi-sr-angle-right"></i>
+
+      <button class="menu-item" onclick="openGallery('BOSTON')">
+        BOSTON <i class="fi fi-sr-angle-right"></i>
       </button>
-    </div>
+
+      <button class="menu-item" onclick="openGallery('NEW YORK')">
+        NEW YORK <i class="fi fi-sr-angle-right"></i>
+      </button>
+
+      <button class="menu-item" onclick="openGallery('WINTER')">
+        WINTER <i class="fi fi-sr-angle-right"></i>
+      </button>
+
+      <button class="share-icon-btn" onclick="shareWebsite()"></button>
+    </nav>
+
   </div>
+</main>
 
 
-  <script>
+<main class="screen" id="gallery">
 
-    /* --- 4.1 O "BANCO DE DADOS" (Variável constante, não muda) ---
-      Aqui guardamos as informações de cada categoria. 
-      O formato é um "Objeto" JSON. Se quiser adicionar fotos em Boston, 
-      basta colocar os caminhos dentro dos colchetes 'images: []'.
-    */
-    const galleryData = {
-      'YONÁ BLACK WHITE': {
-        description: 'Reduce to reveal. By stripping away the color and focusing solely on Yona on the sands of Gloucester, the image transcends ordinary photography.',
-        images: [
-          'images/yona-1.jpg', 'images/yona-2.jpg', 'images/yona-3.jpg', 'images/yona-4.jpg',
-          'images/yona-5.jpg', 'images/yona-6.jpg', 'images/yona-7.jpg', 'images/yona-8.jpg',
-          'images/yona-9.jpg', 'images/yona-10.jpg', 'images/yona-11.jpg', 'images/yona-12.jpg',
-          'images/yona-13.jpg', 'images/yona-14.jpg', 'images/yona-14A.jpg', 'images/yona-14B.jpg',
-          'images/yona-15.jpg', 'images/yona-16.jpg',
-          'images/yona-17.jpg', 'images/yona-18.jpg', 'images/yona-19.jpg', 'images/yona-20.jpg']
-      },
-      'BOSTON': {
-        description: 'Boston in contrast: the taut steel of the Zakim Bridge on one side, a heron among lily pads on the other. Late-afternoon light, silhouettes along the Charles, and a gesture that repeats, the world seen through circles, as if each frame were also about the act of looking. Water, low light, few people. Boston from the side, not head-on.',
-        images: ['images/boston-1.png', 'images/boston-2.png', 'images/boston-3.png', 'images/boston-4.png',
-          'images/boston-5.png', 'images/boston-6.png', 'images/boston-7.png', 'images/boston-8.png',
-          'images/boston-9.png', 'images/boston-10.png', 'images/boston-11.png', 'images/boston-12.png']
-      },
-      'NEW YORK': {
-        description: 'Concrete rhythm. Capturing the electric pulse and towering ambition of the streets, where the city’s raw energy transforms the mundane into the cinematic.',
-        images: []
-      },
-      'WINTER': {
-        description: 'The art of stillness. Through the lens of the cold, the landscape is stripped to its barest form, revealing the haunting beauty of a world in deep repose.',
-        images: ['images/winter-1.png', 'images/winter-2.png', 'images/winter-3.png', 'images/winter-4.png',
-          'images/winter-5.png', 'images/winter-6.png', 'images/winter-7.png', 'images/winter-8.png',
-          'images/winter-9.png', 'images/winter-10.png', 'images/winter-11.png']
+  <button class="back-btn" onclick="goHome()">
+    <i class="fi fi-rs-arrow-left"></i>
+  </button>
+
+  <h2 class="gallery-title" id="gallery-title"></h2>
+  <p class="gallery-sub"></p>
+
+  <div class="grid" id="gallery-grid" role="group" aria-label="Fotos da galeria" aria-busy="false"></div>
+
+  <button class="back-btn back-btn-bottom" onclick="goHome()">
+    <i class="fi fi-rs-arrow-left"></i>
+  </button>
+
+</main>
+
+
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Visualizador de fotos" aria-hidden="true" tabindex="-1">
+  <button class="close-lightbox" type="button" data-lightbox-action="close" aria-label="Fechar foto"><i
+      class="fi fi-br-cross"></i></button>
+
+  <img id="lightbox-img" alt="Foto ampliada" draggable="false">
+
+  <div class="lightbox-controls">
+    <button class="lightbox-arrow lightbox-prev" type="button" data-lightbox-action="prev" aria-label="Foto anterior">
+      <i class="fi fi-sr-angle-left"></i>
+    </button>
+    <button class="lightbox-arrow lightbox-next" type="button" data-lightbox-action="next" aria-label="Próxima foto">
+      <i class="fi fi-sr-angle-right"></i>
+    </button>
+  </div>
+</div>
+
+
+<script>
+
+  /* --- 4.1 O "BANCO DE DADOS" (Variável constante, não muda) ---
+    Aqui guardamos as informações de cada categoria. 
+    O formato é um "Objeto" JSON. Se quiser adicionar fotos em Boston, 
+    basta colocar os caminhos dentro dos colchetes 'images: []'.
+  */
+  const galleryData = {
+    'YONÁ BLACK WHITE': {
+      description: 'Reduce to reveal. By stripping away the color and focusing solely on Yona on the sands of Gloucester, the image transcends ordinary photography.',
+      images: [
+        'images/yona-1.jpg', 'images/yona-2.jpg', 'images/yona-3.jpg', 'images/yona-4.jpg',
+        'images/yona-5.jpg', 'images/yona-6.jpg', 'images/yona-7.jpg', 'images/yona-8.jpg',
+        'images/yona-9.jpg', 'images/yona-10.jpg', 'images/yona-11.jpg', 'images/yona-12.jpg',
+        'images/yona-13.jpg', 'images/yona-14.jpg', 'images/yona-14A.jpg', 'images/yona-14B.jpg',
+        'images/yona-15.jpg', 'images/yona-16.jpg',
+        'images/yona-17.jpg', 'images/yona-18.jpg', 'images/yona-19.jpg', 'images/yona-20.jpg']
+    },
+    'BOSTON': {
+      description: 'Boston in contrast: the taut steel of the Zakim Bridge on one side, a heron among lily pads on the other. Late-afternoon light, silhouettes along the Charles, and a gesture that repeats, the world seen through circles, as if each frame were also about the act of looking. Water, low light, few people. Boston from the side, not head-on.',
+      images: ['images/boston-1.png', 'images/boston-2.png', 'images/boston-3.png', 'images/boston-4.png',
+        'images/boston-5.png', 'images/boston-6.png', 'images/boston-7.png', 'images/boston-8.png',
+        'images/boston-9.png', 'images/boston-10.png', 'images/boston-11.png', 'images/boston-12.png']
+    },
+    'NEW YORK': {
+      description: 'Concrete rhythm. Capturing the electric pulse and towering ambition of the streets, where the city’s raw energy transforms the mundane into the cinematic.',
+      images: []
+    },
+    'WINTER': {
+      description: 'The art of stillness. Through the lens of the cold, the landscape is stripped to its barest form, revealing the haunting beauty of a world in deep repose.',
+      images: ['images/winter-1.png', 'images/winter-2.png', 'images/winter-3.png', 'images/winter-4.png',
+        'images/winter-5.png', 'images/winter-6.png', 'images/winter-7.png', 'images/winter-8.png',
+        'images/winter-9.png', 'images/winter-10.png', 'images/winter-11.png']
+    }
+  };
+
+
+  /* --- 4.2 LÓGICA DE ABRIR A GALERIA ---
+    Essa função recebe o "name" (O nome do botão clicado) e faz toda a transformação visual.
+  */
+  let galleryRequestId = 0;
+  let galleryLoadController = null;
+  const galleryImageRatios = new Map();
+
+  // Ajuste aqui quantas fotos podem baixar ao mesmo tempo.
+  const GALLERY_SIMULTANEOUS_LOADS = 4;
+  const GALLERY_IMAGE_TIMEOUT_MS = 60000;
+
+  function loadGalleryImage(img, src, signal) {
+    return new Promise((resolve) => {
+      let finished = false;
+      let timeoutId;
+      const hasLoaded = () => img.complete && img.naturalWidth > 0 && img.naturalHeight > 0;
+
+      const finish = (loaded) => {
+        if (finished) return;
+        finished = true;
+        clearTimeout(timeoutId);
+        img.removeEventListener('load', handleLoad);
+        img.removeEventListener('error', handleError);
+        signal.removeEventListener('abort', handleAbort);
+        if (!loaded) img.removeAttribute('src');
+        resolve(loaded);
+      };
+      // O evento load confirma o download. O navegador cuida da decodificação
+      // conforme precisa exibir cada foto, sem forçar todas na memória de uma vez.
+      const handleLoad = () => finish(hasLoaded());
+      const handleError = () => finish(false);
+      const handleAbort = () => finish(false);
+
+      if (signal.aborted) {
+        finish(false);
+        return;
+      }
+
+      img.addEventListener('load', handleLoad);
+      img.addEventListener('error', handleError);
+      signal.addEventListener('abort', handleAbort, { once: true });
+      // O prazo começa apenas quando esta foto sai da fila de carregamento.
+      timeoutId = setTimeout(() => finish(hasLoaded()), GALLERY_IMAGE_TIMEOUT_MS);
+      img.decoding = 'async';
+      img.loading = 'eager';
+      img.src = src;
+
+      // Fotos do cache também são reconhecidas, sem chamar img.decode().
+      if (img.complete) {
+        if (hasLoaded()) handleLoad();
+        else handleError();
+      }
+    });
+  }
+
+  async function loadGalleryPhotos(photos, signal) {
+    let nextPhotoIndex = 0;
+    const loadNextPhotos = async () => {
+      while (!signal.aborted && nextPhotoIndex < photos.length) {
+        const photo = photos[nextPhotoIndex++];
+        photo.loaded = await loadGalleryImage(photo.img, photo.src, signal);
+        if (signal.aborted) return;
+        if (photo.loaded) {
+          const ratio = `${photo.img.naturalWidth} / ${photo.img.naturalHeight}`;
+          galleryImageRatios.set(photo.src, ratio);
+          photo.slot.style.setProperty('--photo-ratio', ratio);
+        }
       }
     };
 
+    const workerCount = Math.min(GALLERY_SIMULTANEOUS_LOADS, photos.length);
+    await Promise.all(Array.from({ length: workerCount }, loadNextPhotos));
+    return photos;
+  }
 
-    /* --- 4.2 LÓGICA DE ABRIR A GALERIA ---
-      Essa função recebe o "name" (O nome do botão clicado) e faz toda a transformação visual.
+  function openGallery(name) {
+    const requestId = ++galleryRequestId;
+    if (galleryLoadController) galleryLoadController.abort();
+    galleryLoadController = new AbortController();
+    const signal = galleryLoadController.signal;
+
+    // A) Esconde a tela principal buscando o id "home" e cortando sua exibição (none)
+    document.getElementById('home').style.display = 'none';
+
+    // B) Pega a tela de galeria e altera a exibição para "flex", tornando-a visível.
+    const gallery = document.getElementById('gallery');
+    gallery.style.display = 'flex';
+
+    // C) Truque avançado: Para garantir que as animações reiniciem do zero a cada clique, 
+    //    removemos a classe 'fade-in', forçamos o navegador a recalcular a tela, e adicionamos de novo.
+    gallery.classList.remove('fade-in');
+    void gallery.offsetWidth;
+    gallery.classList.add('fade-in');
+
+    // D) Busca os textos e as fotos dessa categoria no nosso "Banco de Dados"
+    const data = galleryData[name];
+
+    // E) Troca o título visual da página pelo nome que veio no botão
+    const titleElement = document.getElementById('gallery-title');
+    titleElement.textContent = name;
+
+    // F) Formata o nome para virar uma classe CSS. 
+    // Exemplo: "YONÁ BLACK WHITE" vira "yona-black-white". O CSS vai ler isso e aplicar a cor certa.
+    const cssClassName = name.toLowerCase().replace(/\s+/g, '-').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    titleElement.className = `gallery-title ${cssClassName}`;
+
+    // G) Atualiza a frase descritiva abaixo do título.
+    const subElement = document.querySelector('.gallery-sub');
+    subElement.textContent = data.description || 'Adicione suas fotos a esta série';
+
+    // H) Limpa todas as fotos que estavam na galeria antes (evita duplicar fotos)
+    const grid = document.getElementById('gallery-grid');
+    grid.innerHTML = ''; // Esvazia o conteúdo HTML da div
+
+    // I) Separa a lista de imagens (se não existir, usa uma lista vazia [])
+    const list = data.images || [];
+    activeGalleryImages = [];
+    activeGalleryName = name;
+    grid.setAttribute('aria-busy', list.length > 0 ? 'true' : 'false');
+    const backBtnBottom = document.querySelector('.back-btn-bottom');
+
+    /* --- MODO MENSAGEM "COMING SOON" --- 
+       Se a contagem (length) de fotos for 0...
     */
-    let galleryRequestId = 0;
-    let galleryLoadController = null;
-    const galleryImageRatios = new Map();
+    if (list.length === 0) {
+      // Esconde o botão de voltar do final da página (já que a página não terá rolagem)
+      if (backBtnBottom) backBtnBottom.style.display = 'none';
 
-    // Ajuste aqui quantas fotos podem baixar ao mesmo tempo.
-    const GALLERY_SIMULTANEOUS_LOADS = 4;
-    const GALLERY_IMAGE_TIMEOUT_MS = 60000;
-
-    function loadGalleryImage(img, src, signal) {
-      return new Promise((resolve) => {
-        let finished = false;
-        let timeoutId;
-        const hasLoaded = () => img.complete && img.naturalWidth > 0 && img.naturalHeight > 0;
-
-        const finish = (loaded) => {
-          if (finished) return;
-          finished = true;
-          clearTimeout(timeoutId);
-          img.removeEventListener('load', handleLoad);
-          img.removeEventListener('error', handleError);
-          signal.removeEventListener('abort', handleAbort);
-          if (!loaded) img.removeAttribute('src');
-          resolve(loaded);
-        };
-        // O evento load confirma o download. O navegador cuida da decodificação
-        // conforme precisa exibir cada foto, sem forçar todas na memória de uma vez.
-        const handleLoad = () => finish(hasLoaded());
-        const handleError = () => finish(false);
-        const handleAbort = () => finish(false);
-
-        if (signal.aborted) {
-          finish(false);
-          return;
-        }
-
-        img.addEventListener('load', handleLoad);
-        img.addEventListener('error', handleError);
-        signal.addEventListener('abort', handleAbort, { once: true });
-        // O prazo começa apenas quando esta foto sai da fila de carregamento.
-        timeoutId = setTimeout(() => finish(hasLoaded()), GALLERY_IMAGE_TIMEOUT_MS);
-        img.decoding = 'async';
-        img.loading = 'eager';
-        img.src = src;
-
-        // Fotos do cache também são reconhecidas, sem chamar img.decode().
-        if (img.complete) {
-          if (hasLoaded()) handleLoad();
-          else handleError();
-        }
-      });
-    }
-
-    async function loadGalleryPhotos(photos, signal) {
-      let nextPhotoIndex = 0;
-      const loadNextPhotos = async () => {
-        while (!signal.aborted && nextPhotoIndex < photos.length) {
-          const photo = photos[nextPhotoIndex++];
-          photo.loaded = await loadGalleryImage(photo.img, photo.src, signal);
-          if (signal.aborted) return;
-          if (photo.loaded) {
-            const ratio = `${photo.img.naturalWidth} / ${photo.img.naturalHeight}`;
-            galleryImageRatios.set(photo.src, ratio);
-            photo.slot.style.setProperty('--photo-ratio', ratio);
-          }
-        }
-      };
-
-      const workerCount = Math.min(GALLERY_SIMULTANEOUS_LOADS, photos.length);
-      await Promise.all(Array.from({ length: workerCount }, loadNextPhotos));
-      return photos;
-    }
-
-    function openGallery(name) {
-      const requestId = ++galleryRequestId;
-      if (galleryLoadController) galleryLoadController.abort();
-      galleryLoadController = new AbortController();
-      const signal = galleryLoadController.signal;
-
-      // A) Esconde a tela principal buscando o id "home" e cortando sua exibição (none)
-      document.getElementById('home').style.display = 'none';
-
-      // B) Pega a tela de galeria e altera a exibição para "flex", tornando-a visível.
-      const gallery = document.getElementById('gallery');
-      gallery.style.display = 'flex';
-
-      // C) Truque avançado: Para garantir que as animações reiniciem do zero a cada clique, 
-      //    removemos a classe 'fade-in', forçamos o navegador a recalcular a tela, e adicionamos de novo.
-      gallery.classList.remove('fade-in');
-      void gallery.offsetWidth;
-      gallery.classList.add('fade-in');
-
-      // D) Busca os textos e as fotos dessa categoria no nosso "Banco de Dados"
-      const data = galleryData[name];
-
-      // E) Troca o título visual da página pelo nome que veio no botão
-      const titleElement = document.getElementById('gallery-title');
-      titleElement.textContent = name;
-
-      // F) Formata o nome para virar uma classe CSS. 
-      // Exemplo: "YONÁ BLACK WHITE" vira "yona-black-white". O CSS vai ler isso e aplicar a cor certa.
-      const cssClassName = name.toLowerCase().replace(/\s+/g, '-').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-      titleElement.className = `gallery-title ${cssClassName}`;
-
-      // G) Atualiza a frase descritiva abaixo do título.
-      const subElement = document.querySelector('.gallery-sub');
-      subElement.textContent = data.description || 'Adicione suas fotos a esta série';
-
-      // H) Limpa todas as fotos que estavam na galeria antes (evita duplicar fotos)
-      const grid = document.getElementById('gallery-grid');
-      grid.innerHTML = ''; // Esvazia o conteúdo HTML da div
-
-      // I) Separa a lista de imagens (se não existir, usa uma lista vazia [])
-      const list = data.images || [];
-      activeGalleryImages = [];
-      activeGalleryName = name;
-      grid.setAttribute('aria-busy', list.length > 0 ? 'true' : 'false');
-      const backBtnBottom = document.querySelector('.back-btn-bottom');
-
-      /* --- MODO MENSAGEM "COMING SOON" --- 
-         Se a contagem (length) de fotos for 0...
-      */
-      if (list.length === 0) {
-        // Esconde o botão de voltar do final da página (já que a página não terá rolagem)
-        if (backBtnBottom) backBtnBottom.style.display = 'none';
-
-        // Escreve o código HTML da bolinha carregando dentro do Grid Vazio
-        grid.innerHTML = `
+      // Escreve o código HTML da bolinha carregando dentro do Grid Vazio
+      grid.innerHTML = `
           <div class="empty-gallery-msg">
             <div class="loader"></div>
             <p>Coming soon.</p>
           </div>
         `;
-      }
-      /* --- MODO PREENCHIMENTO DE FOTOS --- 
-         Se tiver fotos na lista...
-      */
-      else {
-        // Garante que o botão de voltar inferior vai aparecer
-        if (backBtnBottom) backBtnBottom.style.display = 'inline-flex';
+    }
+    /* --- MODO PREENCHIMENTO DE FOTOS --- 
+       Se tiver fotos na lista...
+    */
+    else {
+      // Garante que o botão de voltar inferior vai aparecer
+      if (backBtnBottom) backBtnBottom.style.display = 'inline-flex';
 
-        // Os blocos aparecem imediatamente, antes de iniciar os downloads.
-        const photos = list.map((src, index) => {
-          const slot = document.createElement('div');
-          slot.className = 'slot is-loading';
-          slot.setAttribute('aria-hidden', 'true');
-          if (galleryImageRatios.has(src)) {
-            slot.style.setProperty('--photo-ratio', galleryImageRatios.get(src));
-          }
+      // Os blocos aparecem imediatamente, antes de iniciar os downloads.
+      const photos = list.map((src, index) => {
+        const slot = document.createElement('div');
+        slot.className = 'slot is-loading';
+        slot.setAttribute('aria-hidden', 'true');
+        if (galleryImageRatios.has(src)) {
+          slot.style.setProperty('--photo-ratio', galleryImageRatios.get(src));
+        }
 
-          const img = document.createElement('img');
-          img.alt = `Portrait de ${name}`;
-          img.tabIndex = -1;
-          img.setAttribute('aria-label', `Ampliar foto ${index + 1} de ${name}`);
-          slot.appendChild(img);
-          grid.appendChild(slot);
+        const img = document.createElement('img');
+        img.alt = `Portrait de ${name}`;
+        img.tabIndex = -1;
+        img.setAttribute('aria-label', `Ampliar foto ${index + 1} de ${name}`);
+        slot.appendChild(img);
+        grid.appendChild(slot);
 
-          return { src, img, slot, loaded: false };
-        });
+        return { src, img, slot, loaded: false };
+      });
 
-        // Mantém todos os skeletons até a fila terminar, preservando a ordem das fotos.
-        loadGalleryPhotos(photos, signal).then((photos) => {
-          // Impede uma série antiga de alterar a galeria se você mudar de tela.
+      // Mantém todos os skeletons até a fila terminar, preservando a ordem das fotos.
+      loadGalleryPhotos(photos, signal).then((photos) => {
+        // Impede uma série antiga de alterar a galeria se você mudar de tela.
+        if (requestId !== galleryRequestId) return;
+        requestAnimationFrame(() => {
           if (requestId !== galleryRequestId) return;
-          requestAnimationFrame(() => {
-            if (requestId !== galleryRequestId) return;
-            activeGalleryImages = photos.filter((photo) => photo.loaded).map((photo) => photo.src);
-            let nextImageIndex = 0;
+          activeGalleryImages = photos.filter((photo) => photo.loaded).map((photo) => photo.src);
+          let nextImageIndex = 0;
 
-            photos.forEach(({ img, slot, loaded }) => {
-              slot.classList.remove('is-loading');
-              slot.removeAttribute('aria-hidden');
+          photos.forEach(({ img, slot, loaded }) => {
+            slot.classList.remove('is-loading');
+            slot.removeAttribute('aria-hidden');
 
-              if (loaded) {
-                const imageIndex = nextImageIndex++;
-                img.tabIndex = 0;
-                img.setAttribute('role', 'button');
-                img.onclick = () => openLightbox(imageIndex, img);
-                img.onkeydown = (event) => {
-                  if (event.key === 'Enter' || event.key === ' ') {
-                    event.preventDefault();
-                    openLightbox(imageIndex, img);
-                  }
-                };
-                slot.classList.add('fade-in-photo');
-              } else {
-                slot.classList.add('has-error');
-                const message = document.createElement('p');
-                message.className = 'slot-error';
-                message.textContent = 'Foto indisponível';
-                slot.appendChild(message);
-              }
-            });
-
-            grid.setAttribute('aria-busy', 'false');
+            if (loaded) {
+              const imageIndex = nextImageIndex++;
+              img.tabIndex = 0;
+              img.setAttribute('role', 'button');
+              img.onclick = () => openLightbox(imageIndex, img);
+              img.onkeydown = (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  openLightbox(imageIndex, img);
+                }
+              };
+              slot.classList.add('fade-in-photo');
+            } else {
+              slot.classList.add('has-error');
+              const message = document.createElement('p');
+              message.className = 'slot-error';
+              message.textContent = 'Foto indisponível';
+              slot.appendChild(message);
+            }
           });
+
+          grid.setAttribute('aria-busy', 'false');
         });
-      }
-
-      // J) Independente da aba, rola a página de volta pro topo (coordenada 0 de X, 0 de Y)
-      window.scrollTo(0, 0);
-    }
-
-
-    /* --- 4.3 LÓGICA DE VOLTAR PARA A HOME ---
-    */
-    function goHome() {
-      galleryRequestId++;
-      if (galleryLoadController) galleryLoadController.abort();
-      galleryLoadController = null;
-      // Pega a galeria, esconde ela, e remove a classe de animação
-      const gallery = document.getElementById('gallery');
-      gallery.style.display = 'none';
-      gallery.classList.remove('fade-in');
-
-      // Pega a tela inicial, exibe ela e rola a página pro topo
-      document.getElementById('home').style.display = 'flex';
-      window.scrollTo(0, 0);
-    }
-
-
-    /* --- 4.4 SISTEMA DE TELA CHEIA (LIGHTBOX) ---
-    */
-
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImg = document.getElementById('lightbox-img');
-    const lightboxPrev = lightbox.querySelector('.lightbox-prev');
-    const lightboxNext = lightbox.querySelector('.lightbox-next');
-    const lightboxClose = lightbox.querySelector('.close-lightbox');
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let activeGalleryImages = [];
-    let activeGalleryName = '';
-    let currentImageIndex = 0;
-    let returnFocus = null;
-    let swipe = null;
-    let suppressSwipeClick = false;
-    let imageAnimation = null;
-
-    function showLightboxImage(direction = 0) {
-      if (imageAnimation) imageAnimation.cancel();
-      lightboxImg.style.transform = '';
-      lightboxImg.src = activeGalleryImages[currentImageIndex];
-      lightboxImg.alt = `${activeGalleryName} — foto ${currentImageIndex + 1} de ${activeGalleryImages.length}`;
-      document.getElementById('lightbox-counter').textContent = `${currentImageIndex + 1} / ${activeGalleryImages.length}`;
-      lightboxPrev.disabled = currentImageIndex === 0;
-      lightboxNext.disabled = currentImageIndex === activeGalleryImages.length - 1;
-      lightboxPrev.hidden = lightboxNext.hidden = activeGalleryImages.length < 2;
-
-      if (!reducedMotion.matches && lightboxImg.animate) {
-        imageAnimation = lightboxImg.animate([
-          { opacity: 0, transform: `translateX(${direction * 60}px)` },
-          { opacity: 1, transform: 'translateX(0)' }
-        ], { duration: direction ? 280 : 400, easing: 'ease-out' });
-      }
-
-      // Antecipa o carregamento das vizinhas para a troca ficar mais rápida.
-      [currentImageIndex - 1, currentImageIndex + 1].forEach((index) => {
-        if (activeGalleryImages[index]) {
-          const image = new Image();
-          image.src = activeGalleryImages[index];
-        }
       });
     }
 
-    function openLightbox(index, trigger) {
-      if (!activeGalleryImages[index]) return;
-      currentImageIndex = index;
-      returnFocus = trigger || document.activeElement;
-      suppressSwipeClick = false;
-      lightbox.classList.add('aberto');
-      lightbox.setAttribute('aria-hidden', 'false');
-      document.documentElement.classList.add('lightbox-open');
-      document.getElementById('home').inert = true;
-      document.getElementById('gallery').inert = true;
-      showLightboxImage();
-      lightboxClose.focus({ preventScroll: true });
+    // J) Independente da aba, rola a página de volta pro topo (coordenada 0 de X, 0 de Y)
+    window.scrollTo(0, 0);
+  }
+
+
+  /* --- 4.3 LÓGICA DE VOLTAR PARA A HOME ---
+  */
+  function goHome() {
+    galleryRequestId++;
+    if (galleryLoadController) galleryLoadController.abort();
+    galleryLoadController = null;
+    // Pega a galeria, esconde ela, e remove a classe de animação
+    const gallery = document.getElementById('gallery');
+    gallery.style.display = 'none';
+    gallery.classList.remove('fade-in');
+
+    // Pega a tela inicial, exibe ela e rola a página pro topo
+    document.getElementById('home').style.display = 'flex';
+    window.scrollTo(0, 0);
+  }
+
+
+  /* --- 4.4 SISTEMA DE TELA CHEIA (LIGHTBOX) ---
+  */
+
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const lightboxPrev = lightbox.querySelector('.lightbox-prev');
+  const lightboxNext = lightbox.querySelector('.lightbox-next');
+  const lightboxClose = lightbox.querySelector('.close-lightbox');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let activeGalleryImages = [];
+  let activeGalleryName = '';
+  let currentImageIndex = 0;
+  let returnFocus = null;
+  let swipe = null;
+  let suppressSwipeClick = false;
+  let imageAnimation = null;
+
+  function showLightboxImage(direction = 0) {
+    if (imageAnimation) imageAnimation.cancel();
+    lightboxImg.style.transform = '';
+    lightboxImg.src = activeGalleryImages[currentImageIndex];
+    lightboxImg.alt = `${activeGalleryName} — foto ${currentImageIndex + 1} de ${activeGalleryImages.length}`;
+    document.getElementById('lightbox-counter').textContent = `${currentImageIndex + 1} / ${activeGalleryImages.length}`;
+    lightboxPrev.disabled = currentImageIndex === 0;
+    lightboxNext.disabled = currentImageIndex === activeGalleryImages.length - 1;
+    lightboxPrev.hidden = lightboxNext.hidden = activeGalleryImages.length < 2;
+
+    if (!reducedMotion.matches && lightboxImg.animate) {
+      imageAnimation = lightboxImg.animate([
+        { opacity: 0, transform: `translateX(${direction * 60}px)` },
+        { opacity: 1, transform: 'translateX(0)' }
+      ], { duration: direction ? 280 : 400, easing: 'ease-out' });
     }
 
-    function changeLightboxImage(direction) {
-      if (!lightbox.classList.contains('aberto')) return;
-      const nextIndex = currentImageIndex + direction;
-      if (nextIndex < 0 || nextIndex >= activeGalleryImages.length) return;
-      currentImageIndex = nextIndex;
-      showLightboxImage(direction);
-    }
-
-    function resetSwipe() {
-      const previousSwipe = swipe;
-      swipe = null;
-      lightbox.classList.remove('is-dragging');
-      lightboxImg.style.transform = '';
-      if (previousSwipe && lightbox.hasPointerCapture(previousSwipe.pointerId)) {
-        lightbox.releasePointerCapture(previousSwipe.pointerId);
-      }
-    }
-
-    function closeLightbox() {
-      if (!lightbox.classList.contains('aberto')) return;
-      resetSwipe();
-      if (imageAnimation) imageAnimation.cancel();
-      lightbox.classList.remove('aberto');
-      document.documentElement.classList.remove('lightbox-open');
-      document.getElementById('home').inert = false;
-      document.getElementById('gallery').inert = false;
-      if (returnFocus && returnFocus.isConnected) returnFocus.focus({ preventScroll: true });
-      lightbox.setAttribute('aria-hidden', 'true');
-    }
-
-    // Um arrasto não deve virar um clique no fundo e fechar a foto.
-    lightbox.addEventListener('click', (event) => {
-      if (suppressSwipeClick && event.detail !== 0) {
-        suppressSwipeClick = false;
-        event.preventDefault();
-        return;
-      }
-      const button = event.target.closest('[data-lightbox-action]');
-      if (button && !button.disabled) {
-        const action = button.dataset.lightboxAction;
-        if (action === 'close') closeLightbox();
-        else changeLightboxImage(action === 'next' ? 1 : -1);
-      } else if (event.target === lightbox) {
-        closeLightbox();
+    // Antecipa o carregamento das vizinhas para a troca ficar mais rápida.
+    [currentImageIndex - 1, currentImageIndex + 1].forEach((index) => {
+      if (activeGalleryImages[index]) {
+        const image = new Image();
+        image.src = activeGalleryImages[index];
       }
     });
+  }
 
-    // Pointer Events funcionam com dedo, mouse e caneta.
-    lightbox.addEventListener('pointerdown', (event) => {
-      if (!event.isPrimary) {
-        resetSwipe();
-        suppressSwipeClick = true;
-        return;
-      }
+  function openLightbox(index, trigger) {
+    if (!activeGalleryImages[index]) return;
+    currentImageIndex = index;
+    returnFocus = trigger || document.activeElement;
+    suppressSwipeClick = false;
+    lightbox.classList.add('aberto');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.documentElement.classList.add('lightbox-open');
+    document.getElementById('home').inert = true;
+    document.getElementById('gallery').inert = true;
+    showLightboxImage();
+    lightboxClose.focus({ preventScroll: true });
+  }
+
+  function changeLightboxImage(direction) {
+    if (!lightbox.classList.contains('aberto')) return;
+    const nextIndex = currentImageIndex + direction;
+    if (nextIndex < 0 || nextIndex >= activeGalleryImages.length) return;
+    currentImageIndex = nextIndex;
+    showLightboxImage(direction);
+  }
+
+  function resetSwipe() {
+    const previousSwipe = swipe;
+    swipe = null;
+    lightbox.classList.remove('is-dragging');
+    lightboxImg.style.transform = '';
+    if (previousSwipe && lightbox.hasPointerCapture(previousSwipe.pointerId)) {
+      lightbox.releasePointerCapture(previousSwipe.pointerId);
+    }
+  }
+
+  function closeLightbox() {
+    if (!lightbox.classList.contains('aberto')) return;
+    resetSwipe();
+    if (imageAnimation) imageAnimation.cancel();
+    lightbox.classList.remove('aberto');
+    document.documentElement.classList.remove('lightbox-open');
+    document.getElementById('home').inert = false;
+    document.getElementById('gallery').inert = false;
+    if (returnFocus && returnFocus.isConnected) returnFocus.focus({ preventScroll: true });
+    lightbox.setAttribute('aria-hidden', 'true');
+  }
+
+  // Um arrasto não deve virar um clique no fundo e fechar a foto.
+  lightbox.addEventListener('click', (event) => {
+    if (suppressSwipeClick && event.detail !== 0) {
       suppressSwipeClick = false;
-      if (event.button !== 0 || event.target.closest('button')) return;
-      if (window.visualViewport && window.visualViewport.scale > 1) return;
-      if (imageAnimation) imageAnimation.cancel();
-      swipe = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, dragging: false };
-    });
-
-    lightbox.addEventListener('pointermove', (event) => {
-      if (!swipe || event.pointerId !== swipe.pointerId) return;
-      const dx = event.clientX - swipe.x;
-      const dy = event.clientY - swipe.y;
-      if (!swipe.dragging && Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy) * 1.2) {
-        swipe.dragging = true;
-        lightbox.setPointerCapture(event.pointerId);
-        lightbox.classList.add('is-dragging');
-      }
-      if (!swipe.dragging) return;
       event.preventDefault();
-      const atEdge = (currentImageIndex === 0 && dx > 0) ||
-        (currentImageIndex === activeGalleryImages.length - 1 && dx < 0);
-      lightboxImg.style.transform = `translateX(${dx * (atEdge ? .2 : .85)}px)`;
-    });
+      return;
+    }
+    const button = event.target.closest('[data-lightbox-action]');
+    if (button && !button.disabled) {
+      const action = button.dataset.lightboxAction;
+      if (action === 'close') closeLightbox();
+      else changeLightboxImage(action === 'next' ? 1 : -1);
+    } else if (event.target === lightbox) {
+      closeLightbox();
+    }
+  });
 
-    lightbox.addEventListener('pointerup', (event) => {
-      if (!swipe || event.pointerId !== swipe.pointerId) return;
-      const dx = event.clientX - swipe.x;
-      const dy = event.clientY - swipe.y;
-      const didDrag = swipe.dragging;
+  // Pointer Events funcionam com dedo, mouse e caneta.
+  lightbox.addEventListener('pointerdown', (event) => {
+    if (!event.isPrimary) {
       resetSwipe();
-      suppressSwipeClick = didDrag;
-      const minimumSwipe = Math.min(80, window.innerWidth * .15);
-      if (didDrag && Math.abs(dx) >= minimumSwipe && Math.abs(dx) > Math.abs(dy) * 1.2) {
-        changeLightboxImage(dx < 0 ? 1 : -1);
-      }
-    });
+      suppressSwipeClick = true;
+      return;
+    }
+    suppressSwipeClick = false;
+    if (event.button !== 0 || event.target.closest('button')) return;
+    if (window.visualViewport && window.visualViewport.scale > 1) return;
+    if (imageAnimation) imageAnimation.cancel();
+    swipe = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, dragging: false };
+  });
 
-    ['pointercancel', 'lostpointercapture'].forEach((type) => {
-      lightbox.addEventListener(type, (event) => {
-        // No toque, a captura inicial pode sair da imagem e passar para o fundo.
-        if (type === 'lostpointercapture' && event.target !== lightbox) return;
-        if (swipe && event.pointerId === swipe.pointerId) {
-          suppressSwipeClick = true;
-          resetSwipe();
-        }
-      });
-    });
+  lightbox.addEventListener('pointermove', (event) => {
+    if (!swipe || event.pointerId !== swipe.pointerId) return;
+    const dx = event.clientX - swipe.x;
+    const dy = event.clientY - swipe.y;
+    if (!swipe.dragging && Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+      swipe.dragging = true;
+      lightbox.setPointerCapture(event.pointerId);
+      lightbox.classList.add('is-dragging');
+    }
+    if (!swipe.dragging) return;
+    event.preventDefault();
+    const atEdge = (currentImageIndex === 0 && dx > 0) ||
+      (currentImageIndex === activeGalleryImages.length - 1 && dx < 0);
+    lightboxImg.style.transform = `translateX(${dx * (atEdge ? .2 : .85)}px)`;
+  });
 
-    document.addEventListener('keydown', (event) => {
-      if (!lightbox.classList.contains('aberto')) return;
-      if (event.key === 'Escape') {
-        event.preventDefault();
-        closeLightbox();
-      } else if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
-        event.preventDefault();
+  lightbox.addEventListener('pointerup', (event) => {
+    if (!swipe || event.pointerId !== swipe.pointerId) return;
+    const dx = event.clientX - swipe.x;
+    const dy = event.clientY - swipe.y;
+    const didDrag = swipe.dragging;
+    resetSwipe();
+    suppressSwipeClick = didDrag;
+    const minimumSwipe = Math.min(80, window.innerWidth * .15);
+    if (didDrag && Math.abs(dx) >= minimumSwipe && Math.abs(dx) > Math.abs(dy) * 1.2) {
+      changeLightboxImage(dx < 0 ? 1 : -1);
+    }
+  });
+
+  ['pointercancel', 'lostpointercapture'].forEach((type) => {
+    lightbox.addEventListener(type, (event) => {
+      // No toque, a captura inicial pode sair da imagem e passar para o fundo.
+      if (type === 'lostpointercapture' && event.target !== lightbox) return;
+      if (swipe && event.pointerId === swipe.pointerId) {
+        suppressSwipeClick = true;
         resetSwipe();
-        changeLightboxImage(event.key === 'ArrowRight' ? 1 : -1);
-      } else if (event.key === 'Tab') {
-        const buttons = [lightboxClose, lightboxPrev, lightboxNext].filter((button) => !button.disabled && !button.hidden);
-        const first = buttons[0];
-        const last = buttons[buttons.length - 1];
-        if (!buttons.includes(document.activeElement)) {
-          event.preventDefault();
-          (event.shiftKey ? last : first).focus();
-        } else if (event.shiftKey && document.activeElement === first) {
-          event.preventDefault();
-          last.focus();
-        } else if (!event.shiftKey && document.activeElement === last) {
-          event.preventDefault();
-          first.focus();
-        }
       }
     });
+  });
 
-    /* --- 4.5 SISTEMA DE COMPARTILHAMENTO --- */
-    function shareWebsite() {
-      // Os dados que serão compartilhados
-      const shareData = {
-        title: 'My Photofolios',
-        text: 'Confira meu portfólio de fotografia!',
-        url: 'https://myphotofolios.com'
-      };
-
-      // Verifica se o navegador/dispositivo suporta a função de compartilhamento nativa
-      if (navigator.share) {
-        navigator.share(shareData)
-          .then(() => console.log('Site compartilhado com sucesso!'))
-          .catch((error) => console.log('Erro ao compartilhar:', error));
-      } else {
-        // Plano B: Se o navegador for muito antigo ou não suportar (ex: alguns desktops),
-        // ele apenas copia o link automaticamente.
-        navigator.clipboard.writeText(shareData.url).then(() => {
-          alert('Link copiado para a área de transferência!');
-        }).catch((err) => {
-          console.error('Falha ao copiar o link: ', err);
-        });
+  document.addEventListener('keydown', (event) => {
+    if (!lightbox.classList.contains('aberto')) return;
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeLightbox();
+    } else if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+      event.preventDefault();
+      resetSwipe();
+      changeLightboxImage(event.key === 'ArrowRight' ? 1 : -1);
+    } else if (event.key === 'Tab') {
+      const buttons = [lightboxClose, lightboxPrev, lightboxNext].filter((button) => !button.disabled && !button.hidden);
+      const first = buttons[0];
+      const last = buttons[buttons.length - 1];
+      if (!buttons.includes(document.activeElement)) {
+        event.preventDefault();
+        (event.shiftKey ? last : first).focus();
+      } else if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
       }
     }
+  });
 
-  </script>
+  /* --- 4.5 SISTEMA DE COMPARTILHAMENTO --- */
+  function shareWebsite() {
+    // Os dados que serão compartilhados
+    const shareData = {
+      title: 'My Photofolios',
+      text: 'Confira meu portfólio de fotografia!',
+      url: 'https://myphotofolios.com'
+    };
+
+    // Verifica se o navegador/dispositivo suporta a função de compartilhamento nativa
+    if (navigator.share) {
+      navigator.share(shareData)
+        .then(() => console.log('Site compartilhado com sucesso!'))
+        .catch((error) => console.log('Erro ao compartilhar:', error));
+    } else {
+      // Plano B: Se o navegador for muito antigo ou não suportar (ex: alguns desktops),
+      // ele apenas copia o link automaticamente.
+      navigator.clipboard.writeText(shareData.url).then(() => {
+        alert('Link copiado para a área de transferência!');
+      }).catch((err) => {
+        console.error('Falha ao copiar o link: ', err);
+      });
+    }
+  }
+
+</script>
 </body>
 
 </html>
