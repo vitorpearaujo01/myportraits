@@ -164,8 +164,9 @@
 
     .title {
       cursor: default;
-      font-size: clamp(3rem, 6vw, 3.7rem);
+      font-size: 3.1rem;
       font-weight: 300;
+      letter-spacing: 0.1rem;
       background: linear-gradient(90deg, var(--text-bright) 0%, var(--text-faint) 70%);
       background-clip: text;
       color: transparent;
@@ -173,12 +174,8 @@
       transition: filter .8s ease;
     }
 
-    .title:hover {
-      filter: brightness(3);
-    }
-
     nav.menu {
-      border: non;
+      border: none;
       display: flex;
       flex-direction: column;
       gap: 35px;
@@ -188,9 +185,9 @@
       border: none;
       cursor: pointer;
       background: none;
-      color: #ffffff;
+      color: var(--text-bright);
       font-size: 2.1rem;
-      font-weight: 500;
+      font-weight: 300;
       letter-spacing: 0.1rem;
       text-transform: uppercase;
       transition: .5s ease;
