@@ -180,11 +180,8 @@
     nav.menu {
       border: non;
       display: flex;
-      /* Flexbox para alinhar os botões em linha */
       flex-direction: column;
-      /* Coloca os botões em coluna (um em cima do outro) */
-      gap: 50px;
-      /* Espaçamento entre os botões */
+      gap: 35px;
     }
 
     .menu-item {
@@ -192,22 +189,17 @@
       cursor: pointer;
       background: none;
       color: #ffffff;
-      font-size: clamp(1.3rem, 4vw, 1.4rem);
+      font-size: 2.1rem;
       font-weight: 500;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.1rem;
       text-transform: uppercase;
       transition: .5s ease;
       display: flex;
-      /* Flexbox para alinhar o texto e o ícone */
       justify-content: space-between;
-      align-items: center;
+      align-items: start;
+      text-align: left;
     }
 
-    .menu-item.yona {
-      background: none;
-      color: #A68DF5;
-      transition: .5s ease-out;
-    }
 
     .menu-item:hover {
       transform: translateX(4px);
@@ -283,17 +275,8 @@
       margin-bottom: 4vh;
     }
 
-    .gallery-title.yona-black-white {
-      background: linear-gradient(90deg, #A68DF5 0%, #cabaff 50%);
-      background-clip: text;
-      color: transparent;
-      transition: all 1s ease-in-out;
-    }
 
-
-    .gallery-title.boston,
-    .gallery-title.new-york,
-    .gallery-title.winter {
+    .gallery-title {
       background: linear-gradient(90deg, var(--text-bright) 0%, var(--text-faint) 50%);
       background-clip: text;
       color: transparent;
@@ -629,9 +612,7 @@
         margin-top: 10vh;
       }
 
-      nav.menu {
-        gap: 50px;
-      }
+
 
       /* Aproxima os botões do menu */
 
@@ -650,23 +631,19 @@
     <h1 class="title">MY <br> PORTRAITS</h1>
 
     <nav class="menu">
-      <button class="menu-item yona" onclick="openGallery('YONÁ BLACK WHITE')">
-        YONÁ BLACK WHITE <i class="fi fi-sr-angle-right"></i>
-      </button>
+      <button class="menu-item yona" onclick="openGallery('YONÁ')">
+        YONÁ
 
-      <button class="menu-item" onclick="openGallery('BOSTON')">
-        BOSTON <i class="fi fi-sr-angle-right"></i>
-      </button>
+        <button class="menu-item" onclick="openGallery('BOSTON')">
+          BOSTON
 
-      <button class="menu-item" onclick="openGallery('NEW YORK')">
-        NEW YORK <i class="fi fi-sr-angle-right"></i>
-      </button>
+          <button class="menu-item" onclick="openGallery('NEW YORK')">
+            NEW YORK
 
-      <button class="menu-item" onclick="openGallery('WINTER')">
-        WINTER <i class="fi fi-sr-angle-right"></i>
-      </button>
+            <button class="menu-item" onclick="openGallery('WINTER')">
+              WINTER
 
-      <button class="share-icon-btn" onclick="shareWebsite()"></button>
+              <button class="share-icon-btn" onclick="shareWebsite()"></button>
     </nav>
 
   </div>
@@ -709,7 +686,7 @@
     basta colocar os caminhos dentro dos colchetes 'images: []'.
   */
   const galleryData = {
-    'YONÁ BLACK WHITE': {
+    'YONÁ': {
       description: 'Reduce to reveal. By stripping away the color and focusing solely on Yona on the sands of Gloucester, the image transcends ordinary photography.',
       images: [
         'images/yona-1.jpg', 'images/yona-2.jpg', 'images/yona-3.jpg', 'images/yona-4.jpg',
